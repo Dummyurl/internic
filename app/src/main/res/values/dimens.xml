@@ -1,0 +1,50 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--LOGIN-->
+    <dimen name="size_top_image_login">265dp</dimen>
+    <dimen name="horizontal_margin_card_view">15dp</dimen>
+    <dimen name="padding_layout_card_view">20dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_corner_radius">6dp</dimen>
+    <dimen name="text_input_space">5dp</dimen>
+    <dimen name="content_space">10dp</dimen>
+    <dimen name="layout_margin_bottom_buttons">45dp</dimen>
+    <dimen name="layout_width_button">170dp</dimen>
+    <dimen name="size_buttons">45dp</dimen>
+    <dimen name="layout_margin_buttons">17dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+    <!--PROFILE-->
+    <dimen name="coordinator_layout_size">250dp</dimen>
+    <dimen name="profile_cooperative_size">200dp</dimen>
+
+    <!--NEW COMPLAINT-->
+    <dimen name="size_message_of_image_view">50dp</dimen>
+
+    <!--ROUTE MAP ACTIVITY-->
+    <dimen name="route_map_box_title_size">15sp</dimen>
+    <dimen name="margin_top_button">30dp</dimen>
+    <dimen name="bottom_sheet_dimen_title_space">48dp</dimen>
+
+    <!--DIALOG EMPTY VIEW-->
+    <dimen name="empty_view_size_image">55dp</dimen>
+    <!--GENERAL-->
+    <dimen name="small_image_profile">50dp</dimen>
+    <dimen name="medium_image_profile">60dp</dimen>
+    <dimen name="large_image_profile">65dp</dimen>
+    <dimen name="border_width">2dp</dimen>
+    <dimen name="small_content_space">6dp</dimen>
+    <dimen name="large_content_space">20dp</dimen>
+    <dimen name="large_of_principal_view_space">60dp</dimen>
+    <dimen name="small_text_size">15sp</dimen>
+    <dimen name="line_height">1dp</dimen>
+    <dimen name="size_top_image_new_complaint">240dp</dimen>
+
+</resources>

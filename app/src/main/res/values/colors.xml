@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#85afc7</color>
+    <color name="colorPrimaryDark">#618fa9</color>
+    <color name="colorAccent">#03A9F4</color>
+    <color name="colorTextInput">#618fa9</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="placeHolderImage">#F5F5F5</color>
+    <color name="backgroundMessageOfImageView">#c4c3c3</color>
+    <color name="colorRed">#E82E4A</color>
+    <color name="grayBlackColor">#6D6D6D</color>
+    <color name="greenColor">#80be72</color>
+    <color name="grayColor">#eeebeb</color>
+    <color name="fontColor">#2e2f2e</color>
+    <color name="littleOpacityBlack">#3F000000</color>
+    <color name="mediumOpacityBlack">#6F000000</color>
+    <color name="blackColor">#000000</color>
+</resources>

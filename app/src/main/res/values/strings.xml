@@ -1,0 +1,170 @@
+<resources>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_description">Descripción</string>
+    <string name="access_token" translatable="false">pk.eyJ1IjoiYXJkZXY5OTA1IiwiYSI6ImNqb3dicDhicjF3MzYzcnJubGt0eXk0c3cifQ.yiwZOznFJP-VSREZct_mZQ</string>
+    <string name="key_access_token">accessToken</string>
+    <string name="key_user_data">userData</string>
+
+    <!--LOGIN-->
+    <string name="edit_text_user_hint">Usuario o correo electrónico</string>
+    <string name="edit_text_password_hint">Contraseña</string>
+    <string name="button_login_title">Acceder</string>
+    <string name="edit_text_title_sign_up">¿No posee una cuenta?</string>
+    <string name="button_title_sign_up">Registrarse</string>
+    <string name="image_view_content_description">logo de la aplicación</string>
+    <string name="login_user_message">Iniciando sesión &#8230;</string>
+
+    <!--NewComplaint-->
+    <string name="new_complaint_title">Título</string>
+    <string name="new_complaint_add_photo">Seleccionar foto</string>
+    <string name="new_complaint_take_photo">Tomar foto</string>
+    <string name="new_complaint_menu_upload_complaint">Publicar</string>
+    <string name="new_complaint_label">Nueva denuncia</string>
+    <string name="default_name_user">Nombre completo del usuario</string>
+    <string name="message_to_user">*Escriba su opinion sobre la cooperativa</string>
+    <string name="message_of_image_view">Imagen de la nueva publicación</string>
+
+    <!--Auto Generated-->
+    <string name="title_activity_navigation">Navigation</string>
+    <string name="title_activity_drawer">drawer</string>
+
+    <!--Drawer-->
+    <string name="profile">Perfil</string>
+    <string name="news">Noticias</string>
+    <string name="complaints">Denuncias</string>
+    <string name="setting">Configuración</string>
+    <string name="other">Otros</string>
+    <string name="about_us">Acerca de</string>
+    <string name="logout">Cerrar sesión</string>
+
+    <!--Drawer User-->
+    <string name="user_profile">Perfil</string>
+    <string name="cooperatives">Cooperativas</string>
+    <string name="favorite_cooperatives">Recorridos favoritos</string>
+
+    <!--Cooperative Profile-->
+    <string name="cooperative_location_description">Lugar: %s\n\nDescripción: %s</string>
+    <string name="default_date_in_profile">Registrada desde: 21 de octubre de 2018</string>
+    <string name="registration_date_format">Registrada desde: %s</string>
+    <string name="cooperative_description_title">Descripción</string>
+    <string name="cooperative_location">Localización</string>
+    <string name="new_bus">Nuevo interlocal</string>
+    <string name="new_route">Nuevo recorrido</string>
+    <string name="new_news">Nueva noticia</string>
+    <string name="main">Menú</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="cooperative_short_name">Nombre corto</string>
+    <string name="cooperative_phone_number">Número de teléfono</string>
+    <string name="cooperative_name">Nombre de la cooperativa</string>
+    <string name="cooperative_qualification">Calificación de la cooperativa</string>
+    <string name="cooperative_large_name">Nombre largo de la cooperativa</string>
+    <string name="cooperative_description">
+        • Primera linea\n• Segunda linea\n• Tercer linea\n
+    </string>
+    <string name="user_cooperative_filter">{\"where\":{\"userID\": %d},
+        \"include\":{\"cooperative\":\"location\"}}</string>
+
+    <!--User Profile-->
+    <string name="user_email_title">Correo electrónico:</string>
+    <string name="user_birth_date_title">Fecha de nacimiento:</string>
+    <string name="user_registration_date_format">Registrado desde: %s</string>
+    <string name="user_list_comments_title">Comentarios realizados</string>
+    <string name="user_data_title">Datos personales</string>
+    <string name="user_comments_filter_in_request">{\"where\":{\"userID\": %d},
+        \"include\":[\"user\",\"typeComment\",\"cooperative\"]}</string>
+
+    <!--User register-->
+    <string name="next">Siguiente</string>
+    <string name="user_birthdate">Fecha de nacimiento</string>
+    <string name="user_fullname">Nombre completo</string>
+    <string name="user_name">Nombre de usuario</string>
+    <string name="user_email">Correo electrónico</string>
+    <string name="user_password">Contraseña</string>
+    <string name="set_location">Elegir ubicación</string>
+    <string name="set_birth_date">Elegir fecha</string>
+    <string name="message_of_image_view_profile">Imagen de portada</string>
+    <string name="message_of_new_image_profile">Sube tu mejor foto\nmás reciente</string>
+    <string name="title_of_birth_date">Selecione su fecha de nacimiento</string>
+    <string name="title_of_types_uses">Tipo de usuario</string>
+    <string name="contact_number">Número de contacto</string>
+    <string name="contact_type">Tipo de contacto</string>
+    <string name="title_contact">Información de contacto</string>
+
+
+    <string-array name="user_type">
+        <item>Tipo de representante</item>
+        <item>Usuario común</item>
+        <item>Representante de cooperativa</item>
+    </string-array>
+
+    <!--Cooperative register-->
+    <string-array name="phones_types">
+        <item>Móvil</item>
+        <item>Oficina</item>
+        <item>Fax</item>
+        <item>Teléfono</item>
+        <item>Otro</item>
+    </string-array>
+
+    <!--General-->
+    <string name="error_message">InterNICA ERROR</string>
+    <string name="error_message_api">InterNICA ERROR API</string>
+    <string name="message">InterNICA msj</string>
+    <string name="selected_place_info">Selected location information:\n%1$s</string>
+    <string name="title_name">Nombre</string>
+    <string name="button_retry_message">reintentar</string>
+    <string name="empty_fields_message">Todos los campos son requeridos.</string>
+
+    <!--Message of response API-->
+    <string name="message_code_ok">Solicitud realizada con éxito</string>
+    <string name="message_bad_request">el servidor no va a procesar su petición por un error del sistema.</string>
+    <string name="message_forbidden">problemas de conexión, intente nuevamente.</string>
+    <string name="message_not_found">el recurso de la solicitud actual, no se ha podido encontrar</string>
+    <string name="message_request_timeout">el tiempo de espera se ha agotado</string>
+    <string name="message_expectation_failed">error interno de la aplicación, ocurrio un error inesperado.</string>
+    <string name="message_internal_server_error">se ha producido un error desconocido al procesar la solicitud.</string>
+    <string name="message_network_connection_error">error de conexión, no se puede concretar la respuesta.</string>
+    <string name="message_login_failed">Error, usuario o contraseña incorrecto.</string>
+    <string name="message_api_format">%d, %s</string>
+
+
+    <!--New bus-->
+    <string name="message_of_image_view_new_bus">Imagen del nuevo interlocal</string>
+    <string name="information_new_bus_message">Información del nuevo bus</string>
+    <string name="bus_driver_name">Número de placa</string>
+    <string name="bus__plate_number">Nombre del conductor</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <!--Route Map Activity-->
+    <string name="directions_activity_toast_message">Route is %1$f meters long.</string>
+    <string name="search_view_hint">Escriba el nombre del lugar</string>
+    <string name="route_map_box_title_bottom_sheet">Información del recorrido</string>
+    <string name="image_stops_title">Imagenes de la parada</string>
+    <string name="layout_stop_title">Información de la parada</string>
+    <string name="layout_route_title">Información básica del ruta</string>
+    <string name="route_description_title">Datos de la ruta</string>
+    <string name="travel_distance_title">Distancia del recorrido</string>
+    <string name="time_route_title">Tiempo del recorrido</string>
+    <string name="button_title_save_changes">Guardar información</string>
+    <string name="progrees_dialog_message">Publicando el recorrido  &#8230;</string>
+
+    <!--New User Hint-->
+    <string name="dialog_new_route_name_hint">Nombre, origen y destino</string>
+    <string name="dialog_new_route_description_hint">Descripción, principales destino</string>
+
+    <!--Dialog empty view-->
+    <string name="empty_view_error_message_title">¡Sin datos por mostrar!</string>
+    <string name="empty_view_error_message_description">Selecione un marcador en el mapa</string>
+    <string name="empty_view_continue_button_message">continuar</string>
+
+    <!--Dialogs-->
+    <string name="choose_news_type">Seleccione el tipo de noticia</string>
+    <string name="post_news_title">Publicar nueva noticia</string>
+    <string name="post_news_message">Nueva noticia publicada</string>
+</resources>

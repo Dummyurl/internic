@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/view_switcher_cooperative">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/constraint_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_top_image_new_complaint">
+
+                <ImageView
+                    android:id="@+id/image_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:contentDescription="@string/image_view_content_description"
+                    android:focusable="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_message_of_image_view"
+                    android:layout_gravity="bottom"
+                    android:background="@color/littleOpacityBlack"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/message_of_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/content_space"
+                        android:layout_marginRight="@dimen/content_space"
+                        android:text="@string/message_of_image_view_profile"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
+                        android:textColor="@color/colorWhite" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="@dimen/large_image_profile"
+                        android:layout_height="@dimen/large_image_profile"
+                        android:layout_margin="@dimen/content_space"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_plus"
+                        app:civ_border_color="@color/placeHolderImage"
+                        app:civ_border_width="@dimen/border_width" />
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:hint="@string/cooperative_short_name"
+                        android:inputType="textPersonName"
+                        android:textColor="@color/colorPrimary"
+                        app:backgroundTint="@color/colorPrimary" />
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/content_space"
+                    android:layout_marginRight="@dimen/content_space"
+                    android:hint="@string/cooperative_large_name"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/colorPrimary"
+                    app:backgroundTint="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/content_space"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/cooperative_phone_number"
+                        android:inputType="textPersonName"
+                        android:textColor="@color/colorPrimary"
+                        app:backgroundTint="@color/colorPrimary" />
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/phones_types" />
+
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/content_space"
+                    android:layout_marginRight="@dimen/content_space"
+                    android:hint="@string/cooperative_description_title"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/colorPrimary"
+                    app:backgroundTint="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/placeHolderImage">
+
+                    <Button
+                        android:id="@+id/maps"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:drawableLeft="@drawable/ic_location"
+                        android:text="@string/set_location"
+                        android:textColor="@color/colorPrimaryDark"
+                        tools:ignore="RtlHardcoded" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/next_button"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/large_content_space"
+                    android:background="@drawable/button_background"
+                    android:text="@string/next"
+                    android:textColor="@color/colorWhite" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+         <include layout="@layout/activity_user_register"/>
+    </LinearLayout>
+
+</ViewSwitcher>

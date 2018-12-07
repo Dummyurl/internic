@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.AppCompat.Light"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="@dimen/card_corner_radius"
+    card_view:cardElevation="@dimen/card_elevation"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/news_image"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/news_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Accidente en la vía norte"
+            android:layout_below="@+id/news_image" />
+
+        <TextView
+            android:id="@+id/news_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Una vaca que cruzaba por la vía central se atravezó en medio de la vía pública cerca del kilómetro 40 de la carretera panamericana norte. Hay una gran final de buses porque no se puede pasar."
+            android:layout_below="@+id/news_title"
+            android:layout_alignLeft="@+id/news_title"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"/>
+
+         <View
+
+              android:layout_width="wrap_content"
+              android:layout_height="1dp"
+              android:background="#ffd5d5d5"
+              android:id="@+id/line_separator"
+              android:layout_below="@+id/news_description"
+             android:layout_marginTop="5dp"
+             android:layout_marginBottom="5dp"
+        >
+
+          </View>
+
+           <ImageView
+              android:id="@+id/news_add_comment"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+               android:paddingRight="5dp"
+               android:paddingBottom="5dp"
+              android:layout_below="@+id/line_separator"
+              android:layout_alignParentRight="true"
+              android:src="@android:drawable/stat_notify_chat"
+              android:background="@color/material_blue_grey_800" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

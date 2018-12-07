@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/littleOpacityBlack">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center|bottom"
+        android:background="@drawable/layout_background"
+        android:layout_marginBottom="40dp"
+        android:paddingTop="@dimen/small_content_space"
+        android:paddingBottom="@dimen/small_content_space"
+        android:paddingRight="@dimen/content_space"
+        android:paddingLeft="@dimen/content_space">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="@dimen/content_space"
+            android:layout_marginStart="@dimen/content_space"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:text="@string/login_user_message"/>
+    </LinearLayout>
+</FrameLayout>

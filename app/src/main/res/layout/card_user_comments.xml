@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="1dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/content_space"
+                android:layout_marginLeft="@dimen/content_space"
+                android:layout_marginRight="@dimen/content_space"
+                android:layout_marginBottom="@dimen/content_space">
+
+                <ImageView
+                    android:id="@+id/user_card_image"
+                    android:layout_width="@dimen/small_image_profile"
+                    android:layout_height="@dimen/small_image_profile"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/user_data_title"
+                    android:background="@drawable/circle_place_holder"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/content_space"
+                    android:layout_marginBottom="@dimen/content_space"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/user_card_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/content_space"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                        tools:ignore="RtlHardcoded" />
+                    <TextView
+                        android:id="@+id/comment_create_at"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/content_space"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        tools:ignore="RtlHardcoded" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/user_card_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_marginLeft="@dimen/content_space"
+                android:layout_marginRight="@dimen/content_space"
+                android:layout_marginBottom="@dimen/content_space"
+                tools:ignore="RtlHardcoded" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                app:cardBackgroundColor="@color/grayColor"
+                android:background="@color/grayColor"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:layout_margin="@dimen/content_space"
+                app:cardElevation="0dp"
+                app:cardMaxElevation="1dp"
+                app:cardCornerRadius="3dp">
+
+                <ImageView
+                    android:id="@+id/cooperative_card_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_margin="@dimen/content_space"
+                    android:contentDescription="@string/user_data_title"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="@dimen/content_space"
+                    android:layout_marginRight="@dimen/content_space"
+                    android:layout_marginBottom="@dimen/content_space">
+
+                    <ImageView
+                        android:id="@+id/cooperative_card_shield"
+                        android:layout_width="@dimen/small_image_profile"
+                        android:layout_height="@dimen/small_image_profile"
+                        android:contentDescription="@string/user_data_title"
+                        android:background="@drawable/circle_place_holder"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/cooperative_card_short_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/content_space"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                            tools:ignore="RtlHardcoded"/>
+
+                        <TextView
+                            android:id="@+id/cooperative_card_long_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/content_space"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                            tools:ignore="RtlHardcoded"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
