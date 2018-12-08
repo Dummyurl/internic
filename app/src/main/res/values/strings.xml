@@ -112,6 +112,8 @@
         <item>Otro</item>
     </string-array>
 
+    <string name="uploading_images_dialog">"Queda por subir %d imágenes"</string>
+
     <!--General-->
     <string name="error_message">InterNICA ERROR</string>
     <string name="error_message_api">InterNICA ERROR API</string>

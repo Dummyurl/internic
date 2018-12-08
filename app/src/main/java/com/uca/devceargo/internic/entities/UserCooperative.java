@@ -1,9 +1,9 @@
 package com.uca.devceargo.internic.entities;
 
-public class UserCoperative {
+public class UserCooperative {
     private int id;
     private int userID;
-    private int cooperativeIID;
+    private int cooperativeID;
     private String createAt;
     private Cooperative cooperative;
 
@@ -31,12 +31,12 @@ public class UserCoperative {
         this.userID = userID;
     }
 
-    public int getCooperativeIID() {
-        return cooperativeIID;
+    public int getCooperativeID() {
+        return cooperativeID;
     }
 
-    public void setCooperativeIID(int cooperativeIID) {
-        this.cooperativeIID = cooperativeIID;
+    public void setCooperativeID(int cooperativeID) {
+        this.cooperativeID = cooperativeID;
     }
 
     public String getCreateAt() {

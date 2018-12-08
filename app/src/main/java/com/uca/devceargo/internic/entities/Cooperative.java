@@ -2,6 +2,8 @@ package com.uca.devceargo.internic.entities;
 
 public class Cooperative {
     private int id;
+    private int locationID;
+    private int contactType;
     private String name;
     private String description;
     private String urlCoverImage;
@@ -9,7 +11,32 @@ public class Cooperative {
     private String qualification;
     private String fullName;
     private String createAt;
+    private String contactNumber;
     private Location location;
+
+    public int getContactType() {
+        return contactType;
+    }
+
+    public void setContactType(int contactType) {
+        this.contactType = contactType;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public void setLocationID(int locationID) {
+        this.locationID = locationID;
+    }
+
+    public int getLocationID() {
+        return locationID;
+    }
 
     public String getName() {
         return name;

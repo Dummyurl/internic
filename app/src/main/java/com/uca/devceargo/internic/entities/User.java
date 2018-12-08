@@ -18,8 +18,6 @@ public class User implements Serializable {
     private String birthDate;
     private String verificationToken;
     private boolean emailVerified;
-    private String contactNumber;
-    private String contactType;
     private int ttl;
 
     public int getId() {
@@ -100,22 +98,6 @@ public class User implements Serializable {
 
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
-    public String getContactType() {
-        return contactType;
-    }
-
-    public void setContactType(String contactType) {
-        this.contactType = contactType;
     }
 
     public int getTtl() {
