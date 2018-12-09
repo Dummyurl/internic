@@ -7,6 +7,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="placeHolderImage">#F5F5F5</color>
     <color name="backgroundMessageOfImageView">#c4c3c3</color>
+    <color name="minimalGrayBackground">#f2f2f2</color>
     <color name="colorRed">#E82E4A</color>
     <color name="grayBlackColor">#6D6D6D</color>
     <color name="greenColor">#80be72</color>

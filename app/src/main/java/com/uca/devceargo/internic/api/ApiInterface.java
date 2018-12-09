@@ -40,6 +40,9 @@ public interface ApiInterface {
     @GET("comments")
     Call<List<Comment>> getCommentUser(@Query("filter") String filter);
 
+    @GET("comments")
+    Call<List<Comment>> getCommentCooperative(@Query("filter") String filter);
+
     @POST("users")
     Call<User>createUser(@Body User user);
 
@@ -49,13 +52,20 @@ public interface ApiInterface {
     @POST("news")
     Call<News> postNews(@Body News news);
 
+    @POST("comments")
+    Call<Comment> postComment(@Body Comment comment);
+
     @POST("routes/savefullroute")
     Call<Route> postRoute(@Body Route route);
 
     @GET("news")
     Call<List<News>> getNews();
 
-        @POST("cooperatives")
+    @GET("cooperatives")
+    Call<List<Cooperative>> getCooperatives();
+
+
+    @POST("cooperatives")
     Call<Cooperative> postCooperative(@Body Cooperative cooperative);
 
     @POST("usersCooperatives")

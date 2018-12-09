@@ -19,6 +19,11 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -26,6 +31,7 @@ import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.MediaLoader;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.api.Api;
+import com.uca.devceargo.internic.classes.LocalDate;
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.User;
 import com.yanzhenjie.album.Action;
@@ -91,7 +97,7 @@ public class UserRegisterActivity extends AppCompatActivity {
         year = calendar.get(Calendar.YEAR);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, monthOfYear, dayOfMonth) -> {
-            date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+            date = year+"-"+(monthOfYear)+"-"+dayOfMonth;
             birthday.setText(date);
         },day,month,year);
         datePickerDialog.show();
@@ -124,14 +130,16 @@ public class UserRegisterActivity extends AppCompatActivity {
         user.setEmail(userEmail.getText().toString());
         user.setPassword(passwordRegister.getText().toString());
         user.setFullName(fullName.getText().toString());
-        user.setBirthDate(/*birthday.getText().toString()*/null);
+        user.setBirthDate(new LocalDate().getDateISOformat(birthday.getText().toString()));
         if(uri != null) {
             user.setUrlImage(uri.toString());
         }else{
             user.setUrlImage(null);
         }
         user.setEmailVerified(false);
-        user.setTypeUserID(getIntent().getExtras().getInt("typeUserID"));
+        user.setTypeUserID(1);
+        user.setTtl(1111);
+
 
 
         Call<User> call = Api.instance().createUser(user);
@@ -183,11 +191,24 @@ public class UserRegisterActivity extends AppCompatActivity {
         UploadTask uploadTask = riversRef.putFile(file);
 
         uploadTask.addOnFailureListener(exception -> {
-        }).addOnSuccessListener(taskSnapshot -> {
-            uri = taskSnapshot.getUploadSessionUri();
-            Toast.makeText(getApplicationContext(), "URL de la imagen "+ uri, Toast.LENGTH_SHORT).show();
-            userRegister();
 
+        }).addOnSuccessListener(taskSnapshot -> {
+
+        });
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            return riversRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                uri = task.getResult();
+                userRegister();
+
+            } else {
+                Toast.makeText(getApplicationContext(), "No se pudieron subir la imagen ", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

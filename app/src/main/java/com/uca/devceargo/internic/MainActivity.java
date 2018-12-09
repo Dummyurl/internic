@@ -38,6 +38,7 @@ import com.uca.devceargo.internic.entities.News;
 import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.TypeNews;
 import com.uca.devceargo.internic.entities.User;
+import com.uca.devceargo.internic.fragments.CooperativeFragment;
 import com.uca.devceargo.internic.fragments.ProfileFragment;
 import com.uca.devceargo.internic.fragments.ProfileUserFragment;
 
@@ -50,10 +51,10 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int COMMON_USER = 1;
     private static final int COOPERATIVE_USER = 2;
-    private User user;
+    //private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        isAuthenticated();
+        //isAuthenticated();
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -73,15 +74,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressLint("InflateParams")
     private void initView(){
         FloatingActionMenu floatingActionMenu = findViewById(R.id.fab);
-        if(user != null){
+        /*if(user != null){
             if(user.getTypeUserID() != COOPERATIVE_USER){
                 floatingActionMenu.setVisibility(View.INVISIBLE);
             }
-        }
+        }*/
         initFabButtons();
     }
 
-    private void isAuthenticated()
+    /*private void isAuthenticated()
     {
         if(Remember.getString(getString(R.string.key_access_token),"").isEmpty())
         {
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = this.getIntent();
             user = (User) intent.getSerializableExtra(LoginActivity.USER_ID);
         }
-    }
+    }*/
 
     /**
      * Initialize SignInActivity and finish the current activity
@@ -244,17 +245,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void defineTypeMenuAndUser(){
 
-        if(user != null){
-            NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        /*if(user != null){
+
             if(user.getTypeUserID() == COOPERATIVE_USER){
                 navigationView.inflateMenu(R.menu.activity_main_drawer);
                 showFragment(ProfileFragment.class, R.id.nav_profile);
-            }else if(user.getTypeUserID() == COMMON_USER){
+            }else if(user.getTypeUserID() == COMMON_USER){*/
                 navigationView.inflateMenu(R.menu.activity_main_drawer_user);
-                showFragment(ProfileUserFragment.class,R.id.nav_user_profile);
-            }
+                showFragment(CooperativeFragment.class,R.id.nav_user_profile);
+            //}
             navigationView.setNavigationItemSelectedListener(this);
-        }
+        //}
     }
     @Override
     public void onBackPressed() {
@@ -319,11 +321,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             // Insert the fragment by replacing any existing fragment
-            if( itemSelected == R.id.nav_profile || itemSelected == R.id.nav_user_profile){
+            /*if( itemSelected == R.id.nav_profile || itemSelected == R.id.nav_user_profile){
                 Bundle args = new Bundle();
                 args.putSerializable(LoginActivity.USER_ID,user);
                 fragment.setArguments(args);
-            }
+            }*/
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fl_content, fragment).commit();
         } catch (Exception e) {
