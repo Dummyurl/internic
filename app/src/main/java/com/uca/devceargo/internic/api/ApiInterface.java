@@ -1,7 +1,7 @@
 package com.uca.devceargo.internic.api;
 
 /*
- * Created by Mario Arce on 16/10/2017.
+ * Created by Mario Arce and ElOskaro101 on 16/10/1998.
  */
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.Comment;
@@ -10,7 +10,7 @@ import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.TypeNews;
 import com.uca.devceargo.internic.TypeUser;
 import com.uca.devceargo.internic.entities.User;
-import com.uca.devceargo.internic.entities.UserCoperative;
+import com.uca.devceargo.internic.entities.UserCooperative;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface ApiInterface {
     Call<List<TypeUser>> getTypesUsers();
 
     @GET("userscooperatives")
-    Call<List<UserCoperative>> getUserCooperative(@Query("filter") String filter);
+    Call<List<UserCooperative>> getUserCooperative(@Query("filter") String filter);
 
     @GET("routes")
     Call<List<Route>> getCooperativeRoutes(@Query("filter") String filter);
@@ -41,8 +41,11 @@ public interface ApiInterface {
     @GET("comments")
     Call<List<Comment>> getCommentUser(@Query("filter") String filter);
 
+    @GET("comments")
+    Call<List<Comment>> getCommentCooperative(@Query("filter") String filter);
+
     @POST("users")
-    Call<List<User>> createUser(@Body User user);
+    Call<User>createUser(@Body User user);
 
     @POST("Users/login")
     Call<AccessToken> login(@Body User user);
@@ -50,6 +53,22 @@ public interface ApiInterface {
     @POST("news")
     Call<News> postNews(@Body News news);
 
+    @POST("comments")
+    Call<Comment> postComment(@Body Comment comment);
+
     @POST("routes/savefullroute")
     Call<Route> postRoute(@Body Route route);
+
+    @GET("news")
+    Call<List<News>> getNews();
+
+    @GET("cooperatives")
+    Call<List<Cooperative>> getCooperatives();
+
+
+    @POST("cooperatives")
+    Call<Cooperative> postCooperative(@Body Cooperative cooperative);
+
+    @POST("usersCooperatives")
+    Call<UserCooperative> postUserCooperative(@Body UserCooperative userCooperative);
 }

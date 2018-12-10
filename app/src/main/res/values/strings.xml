@@ -113,6 +113,8 @@
         <item>Otro</item>
     </string-array>
 
+    <string name="uploading_images_dialog">"Queda por subir %d imágenes"</string>
+
     <!--General-->
     <string name="error_message">InterNICA ERROR</string>
     <string name="error_message_api">InterNICA ERROR API</string>
@@ -169,4 +171,16 @@
     <string name="choose_news_type">Seleccione el tipo de noticia</string>
     <string name="post_news_title">Publicar nueva noticia</string>
     <string name="post_news_message">Nueva noticia publicada</string>
+
+    <!-- Cooperatives -->
+    <string name="action_new_complaint">Denunciar</string>
+    <string name="action_new_opinion">Publicar opinión</string>
+    <string name="action_new_comment">Realizar comentario</string>
+
+    <!--CommentCooperative-->
+    <string name="complaint_cooperative_filter">{\"where\":{\"cooperativeID\": %d},
+        \"include\":[\"user\",\"typeComment\",\"cooperative\"]}</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

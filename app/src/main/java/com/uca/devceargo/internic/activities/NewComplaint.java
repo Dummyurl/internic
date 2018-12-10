@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -20,6 +21,7 @@ import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.MediaLoader;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.api.Api;
+import com.uca.devceargo.internic.entities.Comment;
 import com.uca.devceargo.internic.entities.News;
 import com.yanzhenjie.album.Album;
 import com.yanzhenjie.album.AlbumConfig;
@@ -37,7 +39,8 @@ public class NewComplaint extends AppCompatActivity {
     TextView title;
     TextView description;
     Uri uri;
-    boolean withPicture = false;
+    int cooperativeID;
+    int coomentTypeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,11 @@ public class NewComplaint extends AppCompatActivity {
         title = findViewById(R.id.new_complaint_title);
         description = findViewById(R.id.new_complaint_description);
 
+        if(getIntent().getExtras() != null){
+            cooperativeID = getIntent().getExtras().getInt("cooperativeID");
+            coomentTypeID = getIntent().getExtras().getInt("commentTypeID");
+        }
+
         Album.initialize(AlbumConfig.newBuilder(getApplicationContext())
                 .setAlbumLoader(new MediaLoader())
                 .build());
@@ -71,7 +79,6 @@ public class NewComplaint extends AppCompatActivity {
                  .onResult(result -> {
                      Glide.with(getApplicationContext()).load(result.get(0).getPath()).into(image);
                      uri = Uri.parse(result.get(0).getPath());
-                     withPicture = true;
                  })
                  .onCancel(result -> {
                  })
@@ -85,32 +92,48 @@ public class NewComplaint extends AppCompatActivity {
 
          uploadTask.addOnFailureListener(exception -> {
          }).addOnSuccessListener(taskSnapshot -> {
-             //Intent i = new Intent(getApplicationContext(), MainActivity.class);
-             //startActivity(i);
+             Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+                 if (!task.isSuccessful()) {
+                     throw Objects.requireNonNull(task.getException());
+                 }
+                 return riversRef.getDownloadUrl();
+             }).addOnCompleteListener(task -> {
+                 if (task.isSuccessful()) {
+                     uri = task.getResult();
+                     uploadComplaint();
+                 } else {
+                     Toast.makeText(getApplicationContext(), "No se pudieron subir la imagen ", Toast.LENGTH_SHORT).show();
+                 }
+             });
          });
      }
 
-     public void uploadNews(){
-         News news = new News();
-         news.setCooperativeID(4);
-         news.setLocationID(1);
-         news.setTypeNewID(2);
-         news.setDescription(description.getText().toString());
-         news.setTitle(title.getText().toString());
 
-         Call<News> call = Api.instance().postNews(news);
-         call.enqueue(new Callback<News>() {
+     public void uploadComplaint(){
+        Comment comment = new Comment();
+        comment.setTitle(title.getText().toString());
+        comment.setDescription(description.getText().toString());
+        if(uri != null)
+            comment.setUrlImage(uri.toString());
+        else
+            comment.setUrlImage(null);
+        comment.setTypeCommentID(coomentTypeID);
+        comment.setCooperativeID(cooperativeID);
+        comment.setUserID(1);
+
+         Call<Comment> call = Api.instance().postComment(comment);
+         call.enqueue(new Callback<Comment>() {
              @Override
-             public void onResponse(Call<News> call, Response<News> response) {
+             public void onResponse(Call<Comment> call, Response<Comment> response) {
                  if(response.body() != null) {
-                     Toast.makeText(getApplicationContext(), "News arriba", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), "Opinión publicada", Toast.LENGTH_SHORT).show();
                  }else{
-                     //Toast.makeText(getApplicationContext(), "Nulos", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), "Nulos", Toast.LENGTH_SHORT).show();
                  }
              }
 
              @Override
-             public void onFailure(Call<News> call, Throwable t) {
+             public void onFailure(Call<Comment> call, Throwable t) {
                  Toast.makeText(getApplicationContext(), "News error", Toast.LENGTH_SHORT).show();
                  System.out.println("onFailure "+t.getMessage());
              }
@@ -145,7 +168,11 @@ public class NewComplaint extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.upload_complaint:
                 if(validateFields()){
-                    uploadNews();
+                    if(uri != null){
+                        uploadPicture();
+                    }else{
+                        uploadComplaint();
+                    }
                     onBackPressed();
                 }
 

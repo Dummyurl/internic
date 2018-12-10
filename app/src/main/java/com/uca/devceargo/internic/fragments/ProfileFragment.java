@@ -35,6 +35,7 @@ import com.uca.devceargo.internic.entities.TypeNews;
 import com.uca.devceargo.internic.entities.User;
 import com.uca.devceargo.internic.entities.UserCoperative;
 import java.util.ArrayList;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -224,10 +225,10 @@ public class ProfileFragment extends Fragment {
         recyclerView.setAdapter(new ProgressAdapter());
         String filter = String.format(getString(R.string.user_cooperative_filter_in_request),user.getId());
 
-        Call<List<UserCoperative>> call = Api.instance().getUserCooperative(filter);
-        call.enqueue(new Callback<List<UserCoperative>>() {
+        Call<List<UserCooperative>> call = Api.instance().getUserCooperative(filter);
+        call.enqueue(new Callback<List<UserCooperative>>() {
             @Override
-            public void onResponse(@NonNull Call<List<UserCoperative>> call,@NonNull Response<List<UserCoperative>> response) {
+            public void onResponse(@NonNull Call<List<UserCooperative>> call, @NonNull Response<List<UserCooperative>> response) {
                 if(response.body() != null){
                     if(response.body().size() > 0){
                         Route route = new Route();
@@ -243,7 +244,7 @@ public class ProfileFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<UserCoperative>> call,@NonNull Throwable throwable) {
+            public void onFailure(@NonNull Call<List<UserCooperative>> call, @NonNull Throwable throwable) {
                 showMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
                 Log.e(getString(R.string.error_message_api),throwable.getMessage());
             }

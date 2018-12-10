@@ -38,7 +38,6 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Una vaca que cruzaba por la vía central se atravezó en medio de la vía pública cerca del kilómetro 40 de la carretera panamericana norte. Hay una gran final de buses porque no se puede pasar."
             android:layout_below="@+id/news_title"
-            android:layout_alignLeft="@+id/news_title"
             android:paddingEnd="10dp"
             android:paddingStart="10dp"/>
 
