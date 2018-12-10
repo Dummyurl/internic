@@ -1,11 +1,14 @@
 package com.uca.devceargo.internic.classes;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -15,6 +18,9 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.annotations.Marker;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -22,11 +28,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.entities.Route;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -45,8 +53,9 @@ public class RouteMapBox {
     private String accessToken;
     private Context context;
     private Route route;
-
-    MapboxDirections.Builder directionsBuilder;
+    private MapboxDirections.Builder directionsBuilder;
+    private Uri mapBoxUri;
+    private ProgressDialog progressDialog;
 
     public void setRoute(Route route) {
         this.route = route;
@@ -56,11 +65,20 @@ public class RouteMapBox {
         this.accessToken = accessToken;
         this.map = map;
         this.context = context;
+        mapBoxUri = Uri.parse("/");
     }
+
+    public Uri getMapBoxUri() {
+        return mapBoxUri;
+    }
+
     /**
      * Add the route and marker sources to the map
      */
     public void initSource() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Definiendo la ruta ...");
+
         GeoJsonSource routeGeoJsonSource = new GeoJsonSource(ROUTE_SOURCE_ID,
                 FeatureCollection.fromFeatures(new Feature[] {}));
 
@@ -105,7 +123,6 @@ public class RouteMapBox {
         List<Marker> markers = map.getMarkers();
         int positionEnd = markers.size() -1;
         Point point;
-
         directionsBuilder =  MapboxDirections.builder();
 
         for (int i = 0; i < map.getMarkers().size(); i++) {
@@ -140,15 +157,16 @@ public class RouteMapBox {
 
             @Override
             public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull retrofit2.Response<DirectionsResponse> response) {
-                System.out.println(call.request().url().toString()+"hola");
-
                 // You can get the generic HTTP info about the response
                 Log.i(context.getString(R.string.message),"Response code " + response.code());
+
                 if (response.body() == null) {
                     Log.e(context.getString(R.string.error_message),"No routes found, make sure you set the right user and access token.");
+                    progressDialog.dismiss();
                     return;
                 } else if (response.body().routes().size() < 1) {
                     Log.e(context.getString(R.string.error_message),"No routes found");
+                    progressDialog.dismiss();
                     return;
                 }
 
@@ -156,8 +174,15 @@ public class RouteMapBox {
                 currentRoute = response.body().routes().get(0);
 
                 if(currentRoute.duration() != null && currentRoute.distance() != null){
-                    route.setTime(currentRoute.duration());
-                    route.setDistance(currentRoute.distance()/1000);
+                    assert currentRoute.duration() != null;
+                    Double duration = currentRoute.duration();
+                    assert currentRoute.distance() != null;
+                    Double distance = currentRoute.distance();
+
+                    if(duration != null && distance != null){
+                        route.setTime(duration);
+                        route.setDistance(distance);
+                    }
                 }
 
                 // Retrieve and update the source designated for showing the directions route
@@ -171,13 +196,61 @@ public class RouteMapBox {
                 if (source != null) {
                     Log.d(context.getString(R.string.message),"onResponse: source != null");
                     source.setGeoJson(featureCollection);
+                    positionCamera();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<DirectionsResponse> call,@NonNull Throwable throwable) {
                 Log.e(context.getString(R.string.error_message), throwable.getMessage());
+                progressDialog.dismiss();
             }
+        });
+    }
+
+    @SuppressLint("LogNotTimber")
+    private void positionCamera(){
+        int endPosition = map.getMarkers().size()-1;
+        LatLng locationOne = new LatLng(map.getMarkers().get(0).getPosition().getLatitude(),
+                map.getMarkers().get(0).getPosition().getLongitude());
+        LatLng locationTwo = new LatLng(map.getMarkers().get(endPosition).getPosition().getLatitude(),
+                map.getMarkers().get(endPosition).getPosition().getLongitude());
+
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .include(locationOne) // Northeast
+                .include(locationTwo) // Southwest
+                .build();
+        progressDialog.setMessage("Reposicionando la camara en el mapa ...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        map.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 180)
+                ,7000, new MapboxMap.CancelableCallback() {
+                @Override
+                public void onCancel() {}
+
+                @Override
+                public void onFinish() {
+                    map.snapshot((Bitmap snapshot) -> {
+                        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                                "map_route_" + System.currentTimeMillis() + ".png");
+                        FileOutputStream out;
+                        try {
+                            out = new FileOutputStream(file);
+                            snapshot.compress(Bitmap.CompressFormat.PNG, 90, out);
+                            mapBoxUri = Uri.fromFile(file);
+                            System.out.println("InterNIC uri local file: "+Uri.fromFile(file));
+                            try {
+                                out.close();
+                            } catch (IOException exception) {
+                                exception.printStackTrace();
+                            }
+                        } catch (FileNotFoundException exception) {
+                            exception.printStackTrace();
+                        }
+                    });
+                    progressDialog.dismiss();
+                }
         });
     }
 }

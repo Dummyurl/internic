@@ -1,8 +1,9 @@
 package com.uca.devceargo.internic.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Stop {
+public class Stop implements Serializable {
 
     private String name;
     private String description;

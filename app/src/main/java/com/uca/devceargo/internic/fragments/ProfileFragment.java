@@ -1,60 +1,59 @@
 package com.uca.devceargo.internic.fragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.CircularProgressDrawable;
-import android.text.Html;
-import android.text.Spanned;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.activities.LoginActivity;
+import com.uca.devceargo.internic.activities.RouteMapActivity;
+import com.uca.devceargo.internic.adapters.ProfileAdapter;
+import com.uca.devceargo.internic.adapters.ProgressAdapter;
+import com.uca.devceargo.internic.adapters.TypeNewsAdapter;
 import com.uca.devceargo.internic.api.Api;
 import com.uca.devceargo.internic.api.ApiMessage;
-import com.uca.devceargo.internic.classes.LocalDate;
-import com.uca.devceargo.internic.entities.Cooperative;
+import com.uca.devceargo.internic.entities.News;
+import com.uca.devceargo.internic.entities.Route;
+import com.uca.devceargo.internic.entities.TypeNews;
 import com.uca.devceargo.internic.entities.User;
-import com.uca.devceargo.internic.entities.UserCooperative;
+import com.uca.devceargo.internic.entities.UserCoperative;
+import java.util.ArrayList;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
-
 
 public class ProfileFragment extends Fragment {
-
-    private View fragmentContent;
-    private TextView cooperativeLongName;
-    private TextView cooperativeShortName;
-    private ImageView imageCover;
-    private ImageView shield;
-    private TextView cooperativeDescription;
-    private RatingBar ratingBar;
-    private TextView cooperativeLocation;
-    private TextView cooperativeRegistationDate;
-    private FrameLayout progressContent;
+    public static final int REQUEST_CODE = 2905;
+    public static final String ROUTE_NAME = "route_name";
+    public static final String ROUTE_DESCRIPTION = "route_description";
+    public static final String ROUTE_ID = "routeObject";
     private User user;
+    private View view;
+    private RecyclerView recyclerView;
+    FloatingActionButton newRoute;
+    FloatingActionButton newNews;
+    List<Route> routes;
+    ProfileAdapter profileAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -63,113 +62,182 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        fragmentContent = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         assert getArguments() != null;
         user = (User) getArguments().getSerializable(LoginActivity.USER_ID);
-        initViews();
+        recyclerView = view.findViewById(R.id.profile_recycler_view);
+        routes = new ArrayList<>();//Define List of routes
         getCooperativeAPI();
-        return fragmentContent;
+        initFabButtons();
+        return view;
     }
 
-    private void initViews(){
-        progressContent = fragmentContent.findViewById(R.id.progress_content);
-        cooperativeDescription = fragmentContent.findViewById(R.id.cooperative_description);
-        cooperativeLongName = fragmentContent.findViewById(R.id.cooperative_long_name);
-        cooperativeShortName = fragmentContent.findViewById(R.id.cooperative_short_name);
-        cooperativeLocation = fragmentContent.findViewById(R.id.cooperative_location);
-        cooperativeRegistationDate = fragmentContent.findViewById(R.id.cooperative_registration_date);
-        shield = fragmentContent.findViewById(R.id.shield_image);
-        setDefaultImages(shield,1);
-        imageCover = fragmentContent.findViewById(R.id.cooperative_cover_image);
-        setDefaultImages(imageCover,2);
+    private void initFabButtons(){
+        FloatingActionMenu fab = view.findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
 
-        ratingBar = fragmentContent.findViewById(R.id.rating_bar_indicator);
+        newRoute = view.findViewById(R.id.new_route);
+        newNews = view.findViewById(R.id.new_news);
+
+        newRoute.setOnClickListener((View v) ->{
+            fab.close(true);
+            showDialogNewRoute();
+        });
+
+        newNews.setOnClickListener((View v) ->{
+            showDialogNewNews();
+            fab.close(true);
+        });
     }
 
-    private void showInformation(Cooperative cooperative){
+    @SuppressLint("InflateParams")
+    private void showDialogNewNews(){
+        assert getContext() != null;
+        Context context = this.getContext();
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        cooperativeShortName.setText(cooperative.getName());
-        cooperativeLongName.setText(cooperative.getFullName());
-        Spanned text;
-        cooperativeLocation.setText(String.format(getString(R.string.cooperative_location_description)
-                ,cooperative.getLocation().getName(),cooperative.getLocation().getDescription()));
+        View view = layoutInflater.inflate(R.layout.dialog_news, null);
+        RecyclerView recyclerView = view.findViewById(R.id.list_types_news);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            text = Html.fromHtml(cooperative.getDescription(),Html.FROM_HTML_MODE_COMPACT);
-        }else{
-            text = Html.fromHtml(cooperative.getDescription());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setPositiveButton("Publicar",(DialogInterface dialog, int id) ->{});
+        builder.setNegativeButton("Cancelar", (DialogInterface dialog, int id) ->{});
+        builder.setView(view);
+        builder.setTitle(getString(R.string.choose_news_type));
+
+        AlertDialog dialog = builder.create();
+
+        if(view.getParent() != null)
+            ((ViewGroup)view.getParent()).removeView(view);
+
+        dialog.setView(view);
+        getTypeNews(recyclerView, dialog);
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((View view1) ->
+                uploadNews(dialog));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
+    }
+
+
+    public void uploadNews(AlertDialog dialog){
+        News news = new News();
+        news.setCooperativeID(4);
+        news.setLocationID(1);
+        news.setTypeNewID(2);
+        EditText title = dialog.findViewById(R.id.standard_title);
+        EditText description = dialog.findViewById(R.id.standard_description);
+        assert getContext() != null;
+        Context context = this.getContext();
+
+        if(title != null && description != null){
+            if(!title.getText().toString().isEmpty() || description.getText().toString().isEmpty()){
+                news.setDescription(title.getText().toString());
+                news.setTitle(description.getText().toString());
+            }else{
+                Toast.makeText(context,getString(R.string.empty_fields_message),Toast.LENGTH_SHORT).show();
+            }
         }
-        cooperativeDescription.setText(text);
-        cooperativeRegistationDate.setText(String.format(getString(R.string.registration_date_format),
-                new LocalDate().getDateInString(cooperative.getCreateAt())));
 
-        ratingBar.setRating(Float.parseFloat(cooperative.getQualification()));
+        Call<News> call = Api.instance().postNews(news);
+        call.enqueue(new Callback<News>() {
+            @Override
+            public void onResponse(@NonNull Call<News> call,@NonNull Response<News> response) {
+                if(response.body() != null) {
+                    dialog.dismiss();
+                    Toast.makeText(context, getString(R.string.post_news_message), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<News> call, @NonNull Throwable throwable) {
+                Toast.makeText(context, "News error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    @SuppressLint("CheckResult")
-    private void loadImage(String url, ImageView imageView, int opc){
+    private void getTypeNews(RecyclerView recyclerView, AlertDialog dialog){
+        recyclerView.setAdapter(new ProgressAdapter());
+        Call<List<TypeNews>> call = Api.instance().getTypesNews();
+        call.enqueue(new Callback<List<TypeNews>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<TypeNews>> call, @NonNull Response<List<TypeNews>> response) {
+                if(response.body() != null){
+                    recyclerView.setAdapter(new TypeNewsAdapter(response.body(),dialog));
+                }
+            }
 
-        CircularProgressDrawable placeHolder = new CircularProgressDrawable(fragmentContent.getContext());
-        placeHolder.setStrokeWidth(5f);
-        placeHolder.setCenterRadius(30f);
-        placeHolder.start();
+            @Override
+            public void onFailure(@NonNull Call<List<TypeNews>> call, @NonNull Throwable throwable) {
 
-        RequestOptions options = new RequestOptions()
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.placeholder);
-        if(opc == 1){
-            options.circleCrop();
-        }else{
-            options.placeholder(placeHolder);
-            options.centerCrop();
-        }
-
-        Glide.with(this).load(url)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        placeHolder.stop();
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        placeHolder.stop();
-                        return false;
-                    }
-                }).apply(options).into(imageView);
+            }
+        });
     }
 
-    private void setDefaultImages(ImageView imageView, int opc){
+    @SuppressLint({"InflateParams"})
+    private void showDialogNewRoute(){
+        assert getContext() != null;
+        Context context = this.getContext();
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if(opc == 1){
-            Glide.with(this).load(R.drawable.placeholder).apply(new RequestOptions().circleCrop())
-                    .into(imageView);
-        }else{
-            Glide.with(this).load(R.drawable.placeholder).apply(new RequestOptions().centerCrop())
-                    .into(imageView);
-        }
+        View view = layoutInflater.inflate(R.layout.dialog_new_route, null);
+
+        EditText newRouteName = view.findViewById(R.id.new_route_name);
+        EditText newRouteDescription = view.findViewById(R.id.new_route_description);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setPositiveButton("Siguiente",(DialogInterface dialog, int id) ->{});
+        builder.setNegativeButton("Cancelar", (DialogInterface dialog, int id) ->
+                Toast.makeText(context,"Nueva recorrido, cancelada", Toast.LENGTH_SHORT).show());
+
+        builder.setView(view);
+        builder.setTitle("Nuevo recorrido");
+
+        AlertDialog dialog = builder.create();
+
+        if(view.getParent() != null)
+            ((ViewGroup)view.getParent()).removeView(view);
+
+        dialog.setView(view);
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((View v) -> {
+
+            String name = newRouteName.getText().toString();
+            String description = newRouteDescription.getText().toString();
+
+            if(name.isEmpty() || description.isEmpty()){
+                Toast.makeText(context,getText(R.string.empty_fields_message), Toast.LENGTH_SHORT).show();
+            }else {
+                Intent intent = new Intent(context,RouteMapActivity.class);
+                intent.putExtra(ROUTE_NAME, name);
+                intent.putExtra(ROUTE_DESCRIPTION, description);
+                startActivityForResult(intent, REQUEST_CODE);
+                dialog.dismiss();
+            }
+        });
     }
+
     @SuppressLint("LogNotTimber")
     private void getCooperativeAPI(){
-
-        String filter = String.format(getString(R.string.user_cooperative_filter),
-                user.getId());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new ProgressAdapter());
+        String filter = String.format(getString(R.string.user_cooperative_filter_in_request),user.getId());
 
         Call<List<UserCooperative>> call = Api.instance().getUserCooperative(filter);
         call.enqueue(new Callback<List<UserCooperative>>() {
             @Override
             public void onResponse(@NonNull Call<List<UserCooperative>> call, @NonNull Response<List<UserCooperative>> response) {
                 if(response.body() != null){
-
                     if(response.body().size() > 0){
-                        Cooperative cooperative = response.body().get(0).getCooperative();
-                        loadImage(cooperative.getUrlShield(),shield, 1);
-                        loadImage(cooperative.getUrlCoverImage(),imageCover,2);
-                        showInformation(cooperative);
+                        Route route = new Route();
+                        profileAdapter = new ProfileAdapter(routes);//Define new profileAdapter Object
+                        routes.add(route);
+                        recyclerView.setAdapter(profileAdapter);
+                        profileAdapter.setCooperative(response.body().get(0).getCooperative());
+                        getRoutes(response.body().get(0).getCooperative().getId());
                     }
-                    progressContent.setVisibility(View.GONE);
-
                 }else{
                     showMessageInSnackbar(response.code());
                 }
@@ -178,18 +246,63 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<List<UserCooperative>> call, @NonNull Throwable throwable) {
                 showMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
-                Log.e(fragmentContent.getContext().getString(R.string.error_message_api),
-                        throwable.getMessage());
+                Log.e(getString(R.string.error_message_api),throwable.getMessage());
+            }
+        });
+    }
+    private void getRoutes(int cooperativeID){
+        String filter = String.format(getString(R.string.cooperative_routes_filter_in_request),
+                cooperativeID);
+        Call<List<Route>> call = Api.instance().getCooperativeRoutes(filter);
+        call.enqueue(new Callback<List<Route>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Route>> call,@NonNull Response<List<Route>> response) {
+                if(response.body() != null){
+                    routes.addAll(response.body());
+                    profileAdapter.notifyDataSetChanged();
+                }else{
+                    //setViewInAdapter();
+                    showMessageInSnackbar(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Route>> call, @NonNull Throwable throwable) {
+                showMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
+                //setViewInAdapter();
             }
         });
     }
 
+    /*private void setViewInAdapter(){
+        profileAdapter.setAdapterSize(profileAdapter.getAdapterSize()+1);
+        profileAdapter.setInflateOpc(ProfileAdapter.INFLATE_ERROR_VIEW);
+        profileAdapter.notifyItemRangeChanged(0,(routes.size()));
+    }*/
     private void showMessageInSnackbar(int code){
-        String message = new ApiMessage().sendMessageOfResponseAPI(code,fragmentContent.getContext());
-        Timber.i(message);
-
-        Snackbar.make(fragmentContent,message,
+        String message = new ApiMessage().sendMessageOfResponseAPI(code,view.getContext());
+        Snackbar.make(view,message,
                 Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            Bundle bundle = data.getExtras();
+
+            assert bundle != null;
+            Route route =(Route) bundle.getSerializable(ROUTE_ID);
+            if(route != null){
+                routes.add(1,route);
+                profileAdapter.notifyItemInserted(1);
+                recyclerView.smoothScrollToPosition(1);
+            }
+            Snackbar.make(view,"Éxito, nueva ruta registrada",
+                    Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
     }
 }
