@@ -54,6 +54,7 @@
     <string name="registration_date_format">Registrada desde: %s</string>
     <string name="cooperative_description_title">Descripción</string>
     <string name="cooperative_location">Localización</string>
+    <string name="cooperative_routes_title">Recorridos</string>
     <string name="new_bus">Nuevo interlocal</string>
     <string name="new_route">Nuevo recorrido</string>
     <string name="new_news">Nueva noticia</string>
@@ -64,11 +65,12 @@
     <string name="cooperative_name">Nombre de la cooperativa</string>
     <string name="cooperative_qualification">Calificación de la cooperativa</string>
     <string name="cooperative_large_name">Nombre largo de la cooperativa</string>
-    <string name="cooperative_description">
-        • Primera linea\n• Segunda linea\n• Tercer linea\n
-    </string>
-    <string name="user_cooperative_filter">{\"where\":{\"userID\": %d},
-        \"include\":{\"cooperative\":\"location\"}}</string>
+    <string name="cooperative_description">Descripción de la cooperativa</string>
+    <string name="cooperative_route_cost_format">C$ %d</string>
+    <string name="user_cooperative_filter_in_request">{\"where\":{\"userID\":%d},\"include\":{\"cooperative\":\"location\"}}</string>
+    <string name="cooperative_routes_filter_in_request">{\"where\":{\"cooperativeID\": %d},\"order\":\"createAt DESC\"}</string>
+    <string name="cooperative_message_error_title">¡Rutas no encontradas!</string>
+    <string name="cooperative_message_error_description">Defina los recorridos que brinda actualmente la cooperativa.</string>
 
     <!--User Profile-->
     <string name="user_email_title">Correo electrónico:</string>
@@ -76,8 +78,7 @@
     <string name="user_registration_date_format">Registrado desde: %s</string>
     <string name="user_list_comments_title">Comentarios realizados</string>
     <string name="user_data_title">Datos personales</string>
-    <string name="user_comments_filter_in_request">{\"where\":{\"userID\": %d},
-        \"include\":[\"user\",\"typeComment\",\"cooperative\"]}</string>
+    <string name="user_comments_filter_in_request">{\"where\":{\"userID\": %d},\"include\":[\"user\",\"typeComment\",\"cooperative\"]}</string>
 
     <!--User register-->
     <string name="next">Siguiente</string>
@@ -153,6 +154,7 @@
     <string name="time_route_title">Tiempo del recorrido</string>
     <string name="button_title_save_changes">Guardar información</string>
     <string name="progrees_dialog_message">Publicando el recorrido  &#8230;</string>
+    <string name="progrees_dialog_firebase_message">Publicando minitura del mapa &#8230;</string>
 
     <!--New User Hint-->
     <string name="dialog_new_route_name_hint">Nombre, origen y destino</string>

@@ -1,5 +1,7 @@
 package com.uca.devceargo.internic.entities;
 
+import java.util.List;
+
 public class Cooperative {
     private int id;
     private String name;
@@ -10,6 +12,15 @@ public class Cooperative {
     private String fullName;
     private String createAt;
     private Location location;
+    private List<Route> routes;
+
+    public List<Route> getRoutes() {
+        return routes;
+    }
+
+    public void setRoutes(List<Route> routes) {
+        this.routes = routes;
+    }
 
     public String getName() {
         return name;

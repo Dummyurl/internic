@@ -37,8 +37,8 @@ public class ProfileUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         assert getArguments() != null;
         user = (User) getArguments().getSerializable(LoginActivity.USER_ID);
-        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        recyclerView = view.findViewById(R.id.user_list_comments);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        recyclerView = view.findViewById(R.id.profile_recycler_view);
         getComments();
         return view;
     }
@@ -48,6 +48,9 @@ public class ProfileUserFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new ProgressAdapter());
+        List<Comment> comments = new ArrayList<>();
+        Comment comment = new Comment();
+        comments.add(comment);
         String filter = String.format(getString(R.string.user_comments_filter_in_request),user.getId());
 
         Call<List<Comment>> call = Api.instance().getCommentUser(filter);
@@ -57,13 +60,7 @@ public class ProfileUserFragment extends Fragment {
                 System.out.print(call.request().url());
                 if(response.body() != null){
                     if(response.body().size() > 0){
-
-                        List<Comment> comments = new ArrayList<>();
-                        Comment comment = new Comment();
-                        comments.add(comment);
                         comments.addAll(response.body());
-                        recyclerView.setAdapter(new CommentAdapter(comments,user));
-
                     }else{
                         Log.e(getString(R.string.message),response.message()+" "+response.code());
                         //Empty message
@@ -72,6 +69,7 @@ public class ProfileUserFragment extends Fragment {
                     Log.e(getString(R.string.message),response.message()+" "+response.code());
                 }
                 Log.e(getString(R.string.message),response.message()+" "+response.code());
+                recyclerView.setAdapter(new CommentAdapter(comments,user));
             }
 
             @Override

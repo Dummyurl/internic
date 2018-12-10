@@ -41,7 +41,7 @@
     <dimen name="large_image_profile">65dp</dimen>
     <dimen name="border_width">2dp</dimen>
     <dimen name="small_content_space">6dp</dimen>
-    <dimen name="large_content_space">20dp</dimen>
+    <dimen name="large_content_space">15dp</dimen>
     <dimen name="large_of_principal_view_space">60dp</dimen>
     <dimen name="small_text_size">15sp</dimen>
     <dimen name="line_height">1dp</dimen>
