@@ -2,6 +2,7 @@ package com.uca.devceargo.internic.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,7 +34,7 @@ public class CooperativeFragment extends Fragment {
     //private CooperativeFragment fragment;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cooperative, container, false);
         setRecycler();
@@ -63,8 +64,8 @@ public class CooperativeFragment extends Fragment {
         Call<List<Cooperative>> call = Api.instance().getCooperatives();
         call.enqueue(new Callback<List<Cooperative>>() {
             @Override
-            public void onResponse(Call<List<Cooperative>> call, Response<List<Cooperative>> response) {
-                if (response.body() != null) {
+            public void onResponse(@NonNull Call<List<Cooperative>> call,@NonNull Response<List<Cooperative>> response) {
+                if(response.body() != null){
                     recycler.setAdapter(new CooperativeAdapter(getContext(), response.body()));
                     swipe.setRefreshing(false);
                 } else {
@@ -74,7 +75,7 @@ public class CooperativeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Cooperative>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Cooperative>> call,@NonNull Throwable throwable) {
                 swipe.setRefreshing(false);
                 sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
@@ -89,44 +90,4 @@ public class CooperativeFragment extends Fragment {
                 Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
-
-
-   /* public void showDialog(){
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.dialog_types_users, null);
-
-        RecyclerView recyclerView = view.findViewById(R.id.list_types_users);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        getTypeComment();
-        builder.setView(view);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-    }
-
-    private void getTypeComment() {
-        Call<List<TypeComment>> call = Api.instance().getComments();
-        call.enqueue(new Callback<List<TypeComment>>() {
-            @Override
-            public void onResponse(Call<List<TypeComment>> call, Response<List<TypeComment>> response) {
-                if (response.body() != null) {
-                    recycler.setAdapter(new TypesComplaintAdapter( response.body(), fragment));
-                } else {
-                    Toast.makeText(getContext(), "Nulos las noticias", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<TypeComment>> call, Throwable t) {
-                Toast.makeText(getContext(), "onFailure las noticias", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-
 }

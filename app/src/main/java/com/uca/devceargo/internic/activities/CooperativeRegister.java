@@ -1,14 +1,12 @@
 package com.uca.devceargo.internic.activities;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,11 +16,9 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.MediaLoader;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.classes.CreateCooperative;
@@ -37,10 +33,6 @@ import java.util.Calendar;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class CooperativeRegister extends AppCompatActivity {
 
     private ViewSwitcher viewSwitcher;
@@ -56,27 +48,21 @@ public class CooperativeRegister extends AppCompatActivity {
     private Uri uriProfile;
     private Uri uriCover;
     private Uri uri;
-    //Dialog
-    AlertDialog dialog;
-    View view;
-    LayoutInflater layoutInflater;
-    TextView uploadingText;
-
     // Users
     private Button createUser;
     private CreateCooperative register;
     private FirebaseStorage mStorage;
     StorageReference reference;
-    private int day, month, year;
     private String date;
     private EditText userName;
     private EditText userLongName;
     private EditText userEmail;
     private EditText userPassword;
-    private EditText userBirthday;
+    private TextView userBirthday;
     private CircleImageView userProfile;
     private Uri userUriImage ;
     Button buttonBirthday;
+    ProgressDialog progressDialog;
     private int images;
 
 
@@ -117,12 +103,6 @@ public class CooperativeRegister extends AppCompatActivity {
         userBirthday = findViewById(R.id.birthday_register);
         userPassword = findViewById(R.id.user_password_register);
         buttonBirthday = findViewById(R.id.birthday_button);
-        //dialog
-        layoutInflater = LayoutInflater.from(getApplicationContext());
-        view = layoutInflater.inflate(R.layout.dialog_uploading_images, null);
-        uploadingText = view.findViewById(R.id.text_uploading);
-
-        dialog = buildDialog();
         initActions();
     }
 
@@ -146,11 +126,12 @@ public class CooperativeRegister extends AppCompatActivity {
                 registerCooperative();
                 Toast.makeText(getApplicationContext(), "Registrando...", Toast.LENGTH_SHORT).show();
             }else {
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage("Preparando todo ...");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
                 selectImagesToUpload();
-                dialog.setView(view);
-                dialog.show();
-                uploadingText.setText("Preparando todo, espere...");
-
             }
         });
 
@@ -180,15 +161,18 @@ public class CooperativeRegister extends AppCompatActivity {
     }
 
     private void initCalendar() {
+
         final Calendar calendar = Calendar.getInstance();
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        month = calendar.get(Calendar.MONTH);
-        year = calendar.get(Calendar.YEAR);
+        int day1, month1;
+        day1 = calendar.get(Calendar.DAY_OF_MONTH);
+        month1 = calendar.get(Calendar.MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, monthOfYear, dayOfMonth) -> {
-            date = year+"-"+(monthOfYear)+"-"+dayOfMonth;
-            userBirthday.setText(date);
-        },day,month,year);
+            date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+            userBirthday.setVisibility(View.VISIBLE);
+            System.out.println("InterNIC Date: "+date);
+            userBirthday.setText(new LocalDate().getDateInStringFormat(date));
+        },day1,month1,1999);
         datePickerDialog.show();
     }
 
@@ -219,52 +203,34 @@ public class CooperativeRegister extends AppCompatActivity {
         StorageReference riversRef = reference .child("images/"+file.getLastPathSegment());
         UploadTask uploadTask = riversRef.putFile(file);
 
-        uploadTask.addOnFailureListener(exception -> {
-        }).addOnSuccessListener(taskSnapshot -> {
+        progressDialog.setMessage(getString(R.string.uploading_images_dialog, images));
 
-            uploadingText.setText(this.getString(R.string.uploading_images_dialog, images));
-            images = images -1;
-
-            Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-                if (!task.isSuccessful()) {
-                    throw Objects.requireNonNull(task.getException());
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            }
+            return riversRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                images = images -1;
+                progressDialog.setMessage(getString(R.string.uploading_images_dialog, images));
+                uri = task.getResult();
+                if(typeImage == 1)
+                    uriProfile = uri;
+                if(typeImage == 2)
+                    uriCover = uri;
+                if(typeImage == 3)
+                    userUriImage = uri;
+                if(images == 0){
+                    registerCooperative();
                 }
-                return riversRef.getDownloadUrl();
-            }).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    uri = task.getResult();
-                    if(typeImage == 1)
-                        uriProfile = uri;
-                    if(typeImage == 2)
-                        uriCover = uri;
-                    if(typeImage == 3)
-                        userUriImage = uri;
-
-                    if(images == 0){
-                        uploadingText.setText(this.getString(R.string.uploading_images_dialog, 0));
-                        registerCooperative();
-                        dialog.dismiss();
-                        //showURL();
-                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "No se pudieron subir la imagen ", Toast.LENGTH_SHORT).show();
-                }
-            });
+            } else {
+                Toast.makeText(getApplicationContext(), "No se pudieron subir la imagen ", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
     }
-
-    private void showURL(){
-        System.out.println("imagen profile "+uriProfile);
-
-        System.out.println("imagen cover "+uriCover);
-
-        System.out.println("imagen user Profile "+userUriImage);
-
-    }
-
 
     public void registerCooperative(){
         Cooperative cooperative = new Cooperative();
@@ -272,9 +238,7 @@ public class CooperativeRegister extends AppCompatActivity {
         cooperative.setFullName(fullName.getText().toString());
         cooperative.setName(name.getText().toString());
         cooperative.setLocationID(1);
-        cooperative.setQualification("1");
-        System.out.println("hola registerCooperative");
-
+        cooperative.setQualification("0");
         if(uriCover != null) {
             cooperative.setUrlCoverImage(uriCover.toString());
         }else{
@@ -289,8 +253,6 @@ public class CooperativeRegister extends AppCompatActivity {
 
         cooperative.setContactType(contactType.getSelectedItemPosition());
         cooperative.setContactNumber(number.getText().toString());
-        //cooperative.setUserType(1);
-
         registerUser(cooperative);
 
 
@@ -302,7 +264,7 @@ public class CooperativeRegister extends AppCompatActivity {
         user.setEmail(userEmail.getText().toString());
         user.setPassword(userPassword.getText().toString());
         user.setFullName(userLongName.getText().toString());
-        user.setBirthDate(new LocalDate().getDateISOformat(userBirthday.getText().toString()));
+        user.setBirthDate(new LocalDate().getDateISOformat(date));
         if(userUriImage != null) {
             user.setUrlImage(userUriImage.toString());
         }else{
@@ -310,21 +272,10 @@ public class CooperativeRegister extends AppCompatActivity {
         }
         user.setEmailVerified(false);
         user.setTypeUserID(2);
-        register.userRegister(user, cooperative);
+        register.userRegister(user, cooperative, progressDialog);
 
         createUser.setEnabled(true);
-
     }
-
-    private AlertDialog buildDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        if(view.getParent() != null) {
-            ((ViewGroup)view.getParent()).removeView(view);
-        }
-        return builder.create();
-    }
-
 
     @Override
     public void onBackPressed() {
