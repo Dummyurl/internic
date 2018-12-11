@@ -13,16 +13,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.tumblr.remember.Remember;
 import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.MediaLoader;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.api.Api;
 import com.uca.devceargo.internic.entities.Comment;
 import com.uca.devceargo.internic.entities.News;
+import com.uca.devceargo.internic.entities.User;
 import com.yanzhenjie.album.Album;
 import com.yanzhenjie.album.AlbumConfig;
 
@@ -41,6 +45,10 @@ public class NewComplaint extends AppCompatActivity {
     Uri uri;
     int cooperativeID;
     int commentTypeID;
+    User user;
+    TextView userName;
+    ImageView userProfile;
+    TextView userMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,7 @@ public class NewComplaint extends AppCompatActivity {
         setContentView(R.layout.activity_new_complaint);
         initViews();
         initActions();
+        initUserViews();
     }
     private void initViews(){
         mStorage = FirebaseStorage.getInstance();
@@ -57,6 +66,9 @@ public class NewComplaint extends AppCompatActivity {
         image = findViewById(R.id.image_complaint);
         title = findViewById(R.id.new_complaint_title);
         description = findViewById(R.id.new_complaint_description);
+        userProfile = findViewById(R.id.new_complaint_user_profile);
+        userName = findViewById(R.id.new_complaint_name);
+        userMessage = findViewById(R.id.new_complaint_user_message);
 
         if(getIntent().getExtras() != null){
             cooperativeID = getIntent().getExtras().getInt("cooperativeID");
@@ -66,6 +78,34 @@ public class NewComplaint extends AppCompatActivity {
         Album.initialize(AlbumConfig.newBuilder(getApplicationContext())
                 .setAlbumLoader(new MediaLoader())
                 .build());
+    }
+
+    private void initUserViews(){
+
+        try{
+            if(commentTypeID == 1){
+               userMessage.setText("* Publique su opinión");
+            }
+            if(commentTypeID == 2){
+                userMessage.setText("* Publique su comentario");
+            }
+            if(commentTypeID == 3){
+                userMessage.setText("* Publique su denuncia");
+            }
+        }catch (Exception e){
+
+        }
+
+        String userJson = Remember.getString(getString(R.string.key_user_data),"");
+        if(!userJson.isEmpty()){
+            Gson gson = new Gson();
+            user = gson.fromJson(userJson,User.class);
+            Glide.with(getApplicationContext()).load(user.getUrlImage()).apply(new RequestOptions().circleCrop()).into(userProfile);
+            userName.setText(user.getFullName());
+
+        }else{
+
+        }
     }
 
     private void initActions(){
@@ -119,7 +159,7 @@ public class NewComplaint extends AppCompatActivity {
             comment.setUrlImage(null);
         comment.setTypeCommentID(commentTypeID);
         comment.setCooperativeID(cooperativeID);
-        comment.setUserID(1);
+        comment.setUserID(user.getId());
 
          Call<Comment> call = Api.instance().postComment(comment);
          call.enqueue(new Callback<Comment>() {

@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import com.tumblr.remember.Remember;
 import com.uca.devceargo.internic.activities.LoginActivity;
 import com.uca.devceargo.internic.entities.User;
+import com.uca.devceargo.internic.fragments.CooperativeFragment;
+import com.uca.devceargo.internic.fragments.NewsFragment;
 import com.uca.devceargo.internic.fragments.ProfileFragment;
 import com.uca.devceargo.internic.fragments.ProfileUserFragment;
 
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else{
             Intent intent = this.getIntent();
             user = (User) intent.getSerializableExtra(LoginActivity.USER_ID);
+
         }
     }
 
@@ -130,9 +133,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case  R.id.nav_cooperatives:
                 //Developing, replace this line
+                showFragment(CooperativeFragment.class, R.id.nav_profile);
                 break;
             case  R.id.nav_favorite:
                 //Developing, replace this line
+                showFragment(NewsFragment.class, R.id.nav_profile);
                 break;
             default:
 

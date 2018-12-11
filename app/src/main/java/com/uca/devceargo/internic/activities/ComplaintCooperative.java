@@ -1,5 +1,6 @@
 package com.uca.devceargo.internic.activities;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import retrofit2.Response;
 
 public class ComplaintCooperative extends AppCompatActivity {
     RecyclerView recycler;
+    SwipeRefreshLayout swipe;
     int cooperativeID;
 
     @Override
@@ -28,6 +30,7 @@ public class ComplaintCooperative extends AppCompatActivity {
         receiveParameters();
         setRecycler();
         getComments();
+        swipeListener();
     }
 
     private void receiveParameters() {
@@ -40,7 +43,15 @@ public class ComplaintCooperative extends AppCompatActivity {
         recycler = findViewById(R.id.list_complaints);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+    }
 
+    private void swipeListener(){
+        swipe = findViewById(R.id.swipe_comments);
+        swipe.setOnRefreshListener(this::getComments);
+        swipe.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void getComments(){
@@ -52,14 +63,17 @@ public class ComplaintCooperative extends AppCompatActivity {
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
                 if(response.body() != null){
                     recycler.setAdapter(new ComplaintAdapter(response.body(), getApplicationContext()));
+                    swipe.setRefreshing(false);
                 }else{
                     Toast.makeText(getApplicationContext(), "nulos", Toast.LENGTH_SHORT).show();
+                    swipe.setRefreshing(false);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Comment>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "onFailure "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                swipe.setRefreshing(false);
             }
         });
     }

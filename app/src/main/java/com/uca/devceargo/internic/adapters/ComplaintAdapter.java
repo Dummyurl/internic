@@ -55,7 +55,7 @@ public class ComplaintAdapter extends RecyclerView.Adapter<ComplaintAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
         Comment c = comments.get(i);
         Glide.with(context).load(c.getUser().getUrlImage()).apply(new RequestOptions().circleCrop()).into(holder.profile);
-        holder.userName.setText(c.getUser().getUserName());
+        holder.userName.setText(c.getUser().getFullName());
         holder.createAt.setText(new LocalDate().getDateInString(c.getCreateAt()));
         holder.description.setText(c.getDescription());
         Glide.with(context).load(c.getUrlImage()).apply(new RequestOptions().centerCrop()).into(holder.image);

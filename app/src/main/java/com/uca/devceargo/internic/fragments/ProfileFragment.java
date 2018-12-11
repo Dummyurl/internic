@@ -33,7 +33,7 @@ import com.uca.devceargo.internic.entities.News;
 import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.TypeNews;
 import com.uca.devceargo.internic.entities.User;
-import com.uca.devceargo.internic.entities.UserCoperative;
+import com.uca.devceargo.internic.entities.UserCooperative;
 import java.util.ArrayList;
 
 import java.util.List;

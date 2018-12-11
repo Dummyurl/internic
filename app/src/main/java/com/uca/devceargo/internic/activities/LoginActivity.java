@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void logIn(){
-        /*if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
+        if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
             if(email2.toString().isEmpty() || password2.getText().toString().isEmpty()){
                 Toast.makeText(getApplicationContext(),R.string.empty_fields_message, Toast.LENGTH_LONG).show();
             }else{
@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(password2.getWindowToken(), 0);
             typeUserFragment = showFragment();
             loginRequest(email.getText().toString(), password.getText().toString());
-        }*/
+        }
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
     }
@@ -238,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i(getString(R.string.message),response.message());
                 }
                 if(typeUserFragment != null){
-                    typeUserFragment.dismiss();
+//                    typeUserFragment.dismiss();
                 }
                 finish();
             }

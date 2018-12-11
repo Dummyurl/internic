@@ -3,6 +3,7 @@ package com.uca.devceargo.internic.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import retrofit2.Response;
 public class CooperativeFragment extends Fragment {
     private RecyclerView recycler;
     private View view;
+    private SwipeRefreshLayout swipe;
     //private CooperativeFragment fragment;
 
     @Override
@@ -32,6 +34,8 @@ public class CooperativeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_cooperative, container, false);
         setRecycler();
         getCooperatives();
+        swipeListener();
+
         return view;
     }
 
@@ -39,7 +43,15 @@ public class CooperativeFragment extends Fragment {
         recycler = view.findViewById(R.id.list_cooperatives);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        //fragment = new CooperativeFragment();
+    }
+
+    private void swipeListener(){
+        swipe = view.findViewById(R.id.swipe_cooperatives);
+        swipe.setOnRefreshListener(this::getCooperatives);
+        swipe.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void getCooperatives() {
@@ -49,14 +61,17 @@ public class CooperativeFragment extends Fragment {
             public void onResponse(Call<List<Cooperative>> call, Response<List<Cooperative>> response) {
                 if (response.body() != null) {
                     recycler.setAdapter(new CooperativeAdapter(getContext(), response.body()));
+                    swipe.setRefreshing(false);
                 } else {
                     Toast.makeText(getContext(), "Nulos las noticias", Toast.LENGTH_SHORT).show();
+                    swipe.setRefreshing(false);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Cooperative>> call, Throwable t) {
                 Toast.makeText(getContext(), "onFailure las noticias", Toast.LENGTH_SHORT).show();
+                swipe.setRefreshing(false);
             }
         });
     }
