@@ -2,6 +2,7 @@ package com.uca.devceargo.internic.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -13,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.adapters.CooperativeAdapter;
+import com.uca.devceargo.internic.adapters.ProgressAdapter;
 import com.uca.devceargo.internic.api.Api;
+import com.uca.devceargo.internic.api.ApiMessage;
 import com.uca.devceargo.internic.entities.Cooperative;
 
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class CooperativeFragment extends Fragment {
     private RecyclerView recycler;
@@ -55,6 +59,7 @@ public class CooperativeFragment extends Fragment {
     }
 
     private void getCooperatives() {
+        recycler.setAdapter(new ProgressAdapter());
         Call<List<Cooperative>> call = Api.instance().getCooperatives();
         call.enqueue(new Callback<List<Cooperative>>() {
             @Override
@@ -63,18 +68,28 @@ public class CooperativeFragment extends Fragment {
                     recycler.setAdapter(new CooperativeAdapter(getContext(), response.body()));
                     swipe.setRefreshing(false);
                 } else {
-                    Toast.makeText(getContext(), "Nulos las noticias", Toast.LENGTH_SHORT).show();
                     swipe.setRefreshing(false);
+                    sendMessageInSnackbar(response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Cooperative>> call, Throwable t) {
-                Toast.makeText(getContext(), "onFailure las noticias", Toast.LENGTH_SHORT).show();
                 swipe.setRefreshing(false);
+                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
         });
     }
+
+    private void sendMessageInSnackbar(int code){
+        View contextView = view.findViewById(android.R.id.content);
+        String message = new ApiMessage().sendMessageOfResponseAPI(code,getContext());
+        Timber.i(message);
+        Snackbar.make(contextView,message,
+                Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
 
    /* public void showDialog(){
 

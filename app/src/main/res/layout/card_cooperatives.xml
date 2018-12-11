@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/Theme.AppCompat.Light"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,20 +11,12 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingEnd="2dp"
+        android:paddingStart="2dp"
+        android:paddingBottom="2dp">
 
-        <ImageView
-            android:layout_margin="5dp"
-            android:id="@+id/card_cooperative_menu"
-            android:clickable="true"
-            android:layout_width="20dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_dots"
-            android:layout_alignParentRight="true"
-            android:focusable="true" />
-
-        <TextView
+       <!-- <TextView
             android:id="@+id/card_cooperative_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,33 +25,20 @@
             android:paddingEnd="10dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="18sp"
-            android:text="Universidad Centroamericana" />
+            android:text="Universidad Centroamericana" />-->
 
-        <TextView
-            android:id="@+id/card_cooperative_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="15sp"
-            android:text="(UCA)"
-            android:layout_below="@+id/card_cooperative_full_name"
-            />
-
-
-        <android.support.design.widget.CoordinatorLayout
+        <RelativeLayout
             android:id="@+id/rl"
-            android:layout_below="@id/card_cooperative_name"
+            android:background="@color/minimalGrayBackground"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <ImageView
             android:layout_marginTop="5dp"
             android:id="@+id/card_cooperative_cover"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="180dp"
             android:scaleType="centerCrop"
             android:src="@drawable/background_profile" />
 
@@ -68,142 +48,105 @@
                 android:layout_width="@dimen/large_image_profile"
                 android:layout_height="@dimen/large_image_profile"
                 android:layout_margin="@dimen/content_space"
-                android:contentDescription="@string/cooperative_description"
-                android:layout_gravity="bottom"/>
+                android:layout_below="@id/card_cooperative_cover"
+                android:contentDescription="@string/cooperative_description" />
 
-        </android.support.design.widget.CoordinatorLayout>
+            <RelativeLayout
+                android:layout_below="@id/card_cooperative_cover"
+                android:layout_toEndOf="@id/card_cooperative_profile"
+                android:layout_alignTop="@id/card_cooperative_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                tools:ignore="RtlCompat">
 
-        <TextView
-            android:id="@+id/card_cooperative_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Somos una cooperativa bastante cool que pertence a la red de cooperativas más grande del mundo gg."
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <TextView
+                    android:id="@+id/card_cooperative_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="15sp"
+                    android:text="(UCA)"
+                    />
+
+                    <RatingBar
+                        android:id="@+id/card_cooperative_qualification"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:isIndicator="true" />
+
+                <TextView
+                    android:id="@+id/card_cooperative_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="+505 8222-3456"
+                    tools:ignore="RtlSymmetry" />
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
             android:layout_below="@+id/rl"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:layout_marginTop="10dp"/>
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="#ffd5d5d5"
-            android:id="@+id/line_separator"
-            android:layout_below="@+id/card_cooperative_description"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            <TextView
+                android:id="@+id/card_cooperative_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Somos una cooperativa bastante cool que pertence a la red de cooperativas más grande del mundo gg."
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:layout_marginTop="10dp"/>
 
-        </View>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#ffd5d5d5"
+                android:id="@+id/line_separator"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
+            </View>
 
-       <LinearLayout
-           android:id="@+id/ll"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="vertical"
-           android:layout_marginStart="5dp"
-           android:layout_marginEnd="5dp"
-           android:layout_marginBottom="5dp"
-           android:background="@color/minimalGrayBackground"
-           android:layout_below="@id/line_separator"
-           android:padding="@dimen/small_content_space"
-           android:layout_marginLeft="5dp">
-
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal">
-
-           <ImageView
-               android:layout_marginTop="5dp"
-               android:layout_width="35dp"
-               android:layout_height="35dp"
-               android:src="@drawable/ic_star_rating"/>
-
-           <RelativeLayout
-
-               android:layout_width="wrap_content"
-               android:layout_height="match_parent"
-               android:layout_marginLeft="10dp"
-               android:layout_marginStart="10dp">
-               <TextView
-                   android:id="@+id/card_cooperative_qualification"
-                   android:layout_centerVertical="true"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:textSize="18sp"
-                   android:text="3.4"/>
-           </RelativeLayout>
-
-           </LinearLayout>
-
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal"
-               android:layout_marginTop="5dp">
-
-               <ImageView
-                   android:layout_width="35dp"
-                   android:layout_height="35dp"
-                   android:src="@drawable/ic_location"/>
-
-               <RelativeLayout
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:layout_marginLeft="10dp"
-                   android:layout_marginStart="10dp"
-                   >
-                   <TextView
-                       android:layout_centerVertical="true"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:textSize="18sp"
-                       android:text="Toca para ver la ubicación"/>
-               </RelativeLayout>
-
-           </LinearLayout>
-
-
-           <LinearLayout
-               android:layout_marginTop="5dp"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal">
-
-               <ImageView
-                   android:paddingStart="5dp"
-                   android:layout_width="30dp"
-                   android:layout_height="30dp"
-                   android:src="@drawable/ic_phone"
-                   android:paddingLeft="5dp" />
-
-               <RelativeLayout
-                   android:layout_marginLeft="15dp"
-                   android:layout_marginStart="15dp"
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   >
-                   <TextView
-                       android:id="@+id/card_cooperative_contact"
-                       android:layout_centerVertical="true"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:textSize="18sp"
-                       android:text="+505 8222-3456"/>
-               </RelativeLayout>
-
-               </LinearLayout>
-
-       </LinearLayout>
+        </LinearLayout>
 
         <TextView
-            android:layout_below="@+id/ll"
             android:id="@+id/card_cooperative_show_details"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
+            android:linksClickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/ll"
+            android:layout_centerInParent="true"
             android:text="Ver opiniones"/>
+
+        <ImageView
+            android:id="@+id/card_cooperative_menu"
+            android:clickable="true"
+            android:layout_width="15dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_dots"
+            android:focusable="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/card_cooperative_show_details"
+            tools:ignore="RtlCompat" />
+
 
     </RelativeLayout>
 

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +39,9 @@ public class CooperativeAdapter extends RecyclerView.Adapter<CooperativeAdapter.
         private ImageView profile;
         private ImageView cover;
         private ImageView menu;
-        private TextView fullName;
         private TextView name;
         private TextView description;
-        private TextView qualification;
+        private RatingBar qualification;
         private TextView contact;
         private TextView showDetails;
 
@@ -51,7 +51,6 @@ public class CooperativeAdapter extends RecyclerView.Adapter<CooperativeAdapter.
             profile = view.findViewById(R.id.card_cooperative_profile);
             cover = view.findViewById(R.id.card_cooperative_cover);
             menu = view.findViewById(R.id.card_cooperative_menu);
-            fullName = view.findViewById(R.id.card_cooperative_full_name);
             name = view.findViewById(R.id.card_cooperative_name);
             description = view.findViewById(R.id.card_cooperative_description);
             qualification = view.findViewById(R.id.card_cooperative_qualification);
@@ -71,10 +70,9 @@ public class CooperativeAdapter extends RecyclerView.Adapter<CooperativeAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
         Cooperative c = cooperativeList.get(i);
-        holder.fullName.setText(c.getFullName());
         holder.name.setText(c.getName());
         holder.description.setText(c.getDescription());
-        holder.qualification.setText(c.getQualification());
+        holder.qualification.setRating(Float.parseFloat(c.getQualification()));
         holder.contact.setText(c.getContactNumber());
 
         Glide.with(context).load(c.getUrlShield()).apply(new RequestOptions().circleCrop()).into(holder.profile);
