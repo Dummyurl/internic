@@ -12,7 +12,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uca.devceargo.internic.R;
+import com.uca.devceargo.internic.classes.LocalDate;
 import com.uca.devceargo.internic.entities.News;
 
 /**
@@ -30,15 +32,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView image;
+        private ImageView profile;
         private TextView title;
         private TextView description;
+        private TextView name;
+        private TextView createAt;
 
         public ViewHolder(View view) {
             super(view);
-            image = view.findViewById(R.id.news_image);
-            title = view.findViewById(R.id.news_title);
-            description = view.findViewById(R.id.news_description);
+            profile = view.findViewById(R.id.card_news_profile);
+            title = view.findViewById(R.id.card_news_title);
+            description = view.findViewById(R.id.card_news_description);
+            name = view.findViewById(R.id.card_news_name);
+            createAt = view.findViewById(R.id.card_news_create_at);
         }
     }
 
@@ -55,7 +61,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         News n = newsList.get(position);
         holder.title.setText(n.getTitle());
         holder.description.setText(n.getDescription());
-        Glide.with(context).load(R.drawable.background_profile).into(holder.image);
+        Glide.with(context).load(n.getCooperative().getUrlShield()).apply(new RequestOptions().circleCrop()).into(holder.profile);
+        holder.name.setText(n.getCooperative().getName());
+        holder.createAt.setText(new LocalDate().getDateInString(n.getCreateAt()));
     }
 
     @Override

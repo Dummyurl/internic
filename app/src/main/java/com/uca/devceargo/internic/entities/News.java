@@ -13,6 +13,33 @@ public class News {
     private String title;
     private String description;
 
+    //private User user;
+   // private TypeNews typeNews;
+    private Cooperative cooperative;
+
+   /* public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public TypeNews getTypeNews() {
+        return typeNews;
+    }
+
+    public void setTypeNews(TypeNews typeNews) {
+        this.typeNews = typeNews;
+    }*/
+
+    public Cooperative getCooperative() {
+        return cooperative;
+    }
+
+    public void setCooperative(Cooperative cooperative) {
+        this.cooperative = cooperative;
+    }
 
     public String getTitle() {
         return title;

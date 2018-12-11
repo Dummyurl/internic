@@ -50,6 +50,7 @@ public class TypeNewsAdapter extends RecyclerView.Adapter<TypeNewsAdapter.MyView
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.dialog_item_recycler_view, viewGroup, false);
         return new MyViewHolder(view);

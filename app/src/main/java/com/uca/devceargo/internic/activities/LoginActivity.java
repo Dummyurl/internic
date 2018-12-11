@@ -157,7 +157,6 @@ public class LoginActivity extends AppCompatActivity {
             typeUserFragment = showFragment();
             loginRequest(email.getText().toString(), password.getText().toString());
         }
-
     }
 
     private void loginRequest(String email, String pwd) {
@@ -233,7 +232,7 @@ public class LoginActivity extends AppCompatActivity {
                     sendMessageInSnackbar(response.code());
                 }
                 if(typeUserFragment != null){
-                    typeUserFragment.dismiss();
+//                    typeUserFragment.dismiss();
                 }
                 finish();
             }

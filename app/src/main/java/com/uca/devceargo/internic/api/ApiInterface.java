@@ -8,6 +8,7 @@ import com.uca.devceargo.internic.entities.Comment;
 import com.uca.devceargo.internic.entities.Cooperative;
 import com.uca.devceargo.internic.entities.News;
 import com.uca.devceargo.internic.entities.Route;
+import com.uca.devceargo.internic.entities.TypeComment;
 import com.uca.devceargo.internic.entities.TypeNews;
 import com.uca.devceargo.internic.TypeUser;
 import com.uca.devceargo.internic.entities.User;
@@ -60,12 +61,14 @@ public interface ApiInterface {
     @POST("routes/savefullroute")
     Call<Route> postRoute(@Body Route route);
 
-    @GET("news")
+    @GET("news?filter={\"include\":\"cooperative\"}")
     Call<List<News>> getNews();
 
     @GET("cooperatives")
     Call<List<Cooperative>> getCooperatives();
 
+    @GET("typesComments")
+    Call<List<TypeComment>> getComments();
 
     @POST("cooperatives")
     Call<Cooperative> postCooperative(@Body Cooperative cooperative);

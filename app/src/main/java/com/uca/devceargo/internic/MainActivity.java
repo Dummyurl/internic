@@ -11,6 +11,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+
+import com.tumblr.remember.Remember;
+import com.uca.devceargo.internic.activities.LoginActivity;
 import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.tumblr.remember.Remember;
@@ -56,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else{
             Intent intent = this.getIntent();
             user = (User) intent.getSerializableExtra(LoginActivity.USER_ID);
+
         }
     }
 
@@ -79,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(ProfileFragment.class, R.id.nav_profile);
             }else if(user.getTypeUserID() == COMMON_USER){
                 navigationView.inflateMenu(R.menu.activity_main_drawer_user);
+
                 showFragment(ProfileUserFragment.class,R.id.nav_user_profile);
             }
             navigationView.setNavigationItemSelectedListener(this);
