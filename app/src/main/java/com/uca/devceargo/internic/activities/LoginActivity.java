@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void logIn(){
-        /*if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
+        if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
             if(email2.toString().isEmpty() || password2.getText().toString().isEmpty()){
                 Toast.makeText(getApplicationContext(),R.string.empty_fields_message, Toast.LENGTH_LONG).show();
             }else{
@@ -156,8 +156,7 @@ public class LoginActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(password2.getWindowToken(), 0);
             typeUserFragment = showFragment();
             loginRequest(email.getText().toString(), password.getText().toString());
-        }*/
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
 
     }
 
@@ -193,8 +192,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }else{
                     sendMessageInSnackbar(response.code());
-                    Log.i(getString(R.string.message),new ApiMessage().sendMessageOfResponseAPI(response.code(),
-                            getApplicationContext()));
                     if(typeUserFragment != null){
                         typeUserFragment.dismiss();
                     }
@@ -206,7 +203,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<AccessToken> call,@NonNull Throwable throwable) {
                 sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
-                Log.e(getString(R.string.error_message_api),throwable.getMessage());
                 if(typeUserFragment != null){
                     typeUserFragment.dismiss();
                 }
@@ -228,14 +224,13 @@ public class LoginActivity extends AppCompatActivity {
                     String userJson = gson.toJson(response.body());
                     Remember.putString("userData", userJson, (Boolean success) -> {
                         if (success) {
-                            Log.i(getString(R.string.message),"usuario guardado");
+                            System.out.println("Éxito al guardar los datos del usuario");
                         }
                     });
                     intent.putExtra(USER_ID,response.body());
                     startActivity(intent);
                 }else{
                     sendMessageInSnackbar(response.code());
-                    Log.i(getString(R.string.message),response.message());
                 }
                 if(typeUserFragment != null){
                     typeUserFragment.dismiss();
@@ -246,7 +241,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable throwable) {
                 sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
-                Log.e(getString(R.string.error_message_api),throwable.getMessage());
                 if(typeUserFragment != null){
                     typeUserFragment.dismiss();
                 }

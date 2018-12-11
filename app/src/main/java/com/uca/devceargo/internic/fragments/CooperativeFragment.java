@@ -1,6 +1,7 @@
 package com.uca.devceargo.internic.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +28,7 @@ public class CooperativeFragment extends Fragment {
     private View view;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cooperative, container, false);
         setRecycler();
@@ -45,7 +46,7 @@ public class CooperativeFragment extends Fragment {
         Call<List<Cooperative>> call = Api.instance().getCooperatives();
         call.enqueue(new Callback<List<Cooperative>>() {
             @Override
-            public void onResponse(Call<List<Cooperative>> call, Response<List<Cooperative>> response) {
+            public void onResponse(@NonNull Call<List<Cooperative>> call,@NonNull Response<List<Cooperative>> response) {
                 if(response.body() != null){
                     recycler.setAdapter(new CooperativeAdapter(getContext(), response.body()));
                 }else{
@@ -54,7 +55,7 @@ public class CooperativeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Cooperative>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Cooperative>> call,@NonNull Throwable throwable) {
                 Toast.makeText(getContext(), "onFailure las noticias", Toast.LENGTH_SHORT).show();
             }
         });

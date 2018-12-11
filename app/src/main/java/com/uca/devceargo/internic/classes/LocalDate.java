@@ -27,6 +27,17 @@ public class LocalDate {
        return "";
     }
 
+    public String getDateInStringFormat(String simpleDate){
+
+        if(simpleDate == null){
+            simpleDate = "1900-1-1";
+        }
+        DateTimeFormatter parser1 = DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTime time = parser1.parseDateTime(simpleDate);
+        Date date = time.toDate();
+        return new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(date);
+    }
+
     public String getDateInStringWithHour(String dateISOformat){
 
         if(dateISOformat != null){

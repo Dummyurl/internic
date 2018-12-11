@@ -5,6 +5,7 @@ package com.uca.devceargo.internic.api;
  */
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.Comment;
+import com.uca.devceargo.internic.entities.Cooperative;
 import com.uca.devceargo.internic.entities.News;
 import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.TypeNews;

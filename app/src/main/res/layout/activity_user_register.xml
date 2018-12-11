@@ -145,7 +145,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/title_of_birth_date"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <TextView
+                    android:id="@+id/birthday_register"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:visibility="gone"
+                    android:layout_margin="@dimen/content_space"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -163,12 +172,6 @@
                         android:textColor="@color/colorPrimaryDark"
                         tools:ignore="RtlHardcoded"/>
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/birthday_register"
-                    android:enabled="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"/>
             </LinearLayout>
 
             <Button

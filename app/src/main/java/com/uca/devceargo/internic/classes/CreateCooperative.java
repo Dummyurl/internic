@@ -1,9 +1,12 @@
 package com.uca.devceargo.internic.classes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.tumblr.remember.Remember;
 import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.api.Api;
 import com.uca.devceargo.internic.entities.AccessToken;
@@ -21,31 +24,40 @@ public class CreateCooperative {
     private int cooperativeID;
     private int userID;
     private String userPassword;
+    private ProgressDialog progressDialog;
 
     public CreateCooperative(Context context) {
         this.context = context;
     }
 
-    public void userRegister(User user, Cooperative cooperative){
+    public void userRegister(User user, Cooperative cooperative, ProgressDialog progress){
+        this.progressDialog = progress;
+        this.progressDialog.setMessage("Registrando datos de usuario ...");
         userPassword = user.getPassword();
         Call<User> call = Api.instance().createUser(user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if(response.body() != null) {
-                    System.out.println("register éxito al crear el usuario ");
+                    Gson gson = new Gson();
+                    String userJson = gson.toJson(response.body());
+                    Remember.putString("userData", userJson, (Boolean success) -> {
+                        if (success) {
+                            System.out.println("Éxito al guardar los datos del usuario");
+                        }
+                    });
                     response.body().setPassword(userPassword);
                     userID = response.body().getId();
                     loginRequest(response.body(), cooperative);
 
                 }else{
-                    System.out.println("register nulos al registar usuario");
+                    progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                System.out.println("register error al crear el usuario "+t.getMessage());
+                progressDialog.dismiss();
             }
         });
     }
@@ -59,41 +71,44 @@ public class CreateCooperative {
         Call<AccessToken> call = Api.instance().login(user);
         call.enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(Call<AccessToken> call, final Response<AccessToken> response) {
+            public void onResponse(@NonNull Call<AccessToken> call,@NonNull Response<AccessToken> response) {
                 if (response.body() != null) {
-                    System.out.println("register Usuario logeado "+response.body().getId());
-                    cooperativeRegister(cooperative);
+                    Remember.putString("accessToken", response.body().getId(), (Boolean success) -> {
+                        if (success) {
+                            cooperativeRegister(cooperative);
+                        }
+                    });
                 }else{
-                    System.out.println("register Nulos al logear");
+                    progressDialog.dismiss();
                 }
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
-                System.out.println("register Error al logear "+t.getMessage());
+            public void onFailure(@NonNull Call<AccessToken> call,@NonNull Throwable throwable) {
+                progressDialog.dismiss();
             }
         });
 
     }
 
-    public void cooperativeRegister(Cooperative cooperative){
-
+    private void cooperativeRegister(Cooperative cooperative){
+        progressDialog.setMessage("Registrando los datos de la cooperativa ...");
         Call<Cooperative> call = Api.instance().postCooperative(cooperative);
         call.enqueue(new Callback<Cooperative>() {
             @Override
-            public void onResponse(Call<Cooperative> call, Response<Cooperative> response) {
+            public void onResponse(@NonNull Call<Cooperative> call, @NonNull Response<Cooperative> response) {
                 if(response.body() != null){
                     System.out.println("register cooperativa creada");
                     cooperativeID = response.body().getId();
                     userCooperativeRegister();
                 }else{
-                    System.out.println("register nulos al crear la ");
+                    progressDialog.dismiss();
                 }
             }
 
             @Override
-            public void onFailure(Call<Cooperative> call, Throwable t) {
-                System.out.println("register error al subir la cooperativa ");
+            public void onFailure(@NonNull Call<Cooperative> call,@NonNull Throwable throwable) {
+                progressDialog.dismiss();
             }
         });
     }
@@ -109,17 +124,18 @@ public class CreateCooperative {
         Call<UserCooperative> call = Api.instance().postUserCooperative(cooperative);
         call.enqueue(new Callback<UserCooperative>() {
             @Override
-            public void onResponse(Call<UserCooperative> call, Response<UserCooperative> response) {
+            public void onResponse(@NonNull Call<UserCooperative> call,@NonNull Response<UserCooperative> response) {
                 if(response.body() != null){
+                    progressDialog.dismiss();
                     context.startActivity(new Intent(context.getApplicationContext(), MainActivity.class));
                 }else{
-                    System.out.println("register vino nula la userCooperative");
+                    progressDialog.dismiss();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserCooperative> call, Throwable t) {
-                System.out.println("register error al subir la UserCooperativa ");
+            public void onFailure(@NonNull Call<UserCooperative> call,@NonNull Throwable throwable) {
+                progressDialog.dismiss();
             }
         });
 

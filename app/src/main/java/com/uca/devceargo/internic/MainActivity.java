@@ -14,8 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.tumblr.remember.Remember;
+import com.uca.devceargo.internic.activities.ComplaintCooperative;
 import com.uca.devceargo.internic.activities.LoginActivity;
 import com.uca.devceargo.internic.entities.User;
+import com.uca.devceargo.internic.fragments.CooperativeFragment;
+import com.uca.devceargo.internic.fragments.NewsFragment;
 import com.uca.devceargo.internic.fragments.ProfileFragment;
 import com.uca.devceargo.internic.fragments.ProfileUserFragment;
 
@@ -101,15 +104,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id){
 
             case  R.id.nav_user_profile:
+                showFragment(ProfileUserFragment.class,R.id.nav_user_profile);
                 break;
             case  R.id.nav_profile:
                 showFragment(ProfileFragment.class, R.id.nav_profile);
                 break;
             case  R.id.nav_news:
-                //Developing, replace this line
+                showFragment(NewsFragment.class,R.id.nav_news);
                 break;
             case  R.id.nav_complaint:
-                //Developing, replace this line
+                showFragment(ComplaintCooperative.class, R.id.nav_complaint);
                 break;
             case  R.id.nav_setting:
                 //Developing, replace this line
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 backToSignInActivity();
                 break;
             case  R.id.nav_cooperatives:
-                //Developing, replace this line
+                showFragment(CooperativeFragment.class,R.id.nav_cooperatives);
                 break;
             case  R.id.nav_favorite:
                 //Developing, replace this line
