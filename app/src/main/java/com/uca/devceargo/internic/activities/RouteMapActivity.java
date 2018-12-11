@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.github.clans.fab.FloatingActionButton;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Feature;
@@ -39,10 +39,13 @@ import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.adapters.StopImageAdapter;
 import com.uca.devceargo.internic.api.Api;
 import com.uca.devceargo.internic.api.ApiMessage;
+import com.uca.devceargo.internic.classes.FireBasePicture;
 import com.uca.devceargo.internic.classes.LocationPicker;
 import com.uca.devceargo.internic.classes.RouteMapBox;
 import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.Stop;
+import com.uca.devceargo.internic.fragments.ProfileFragment;
+import com.uca.devceargo.internic.interfaces.FireBaseEventListener;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
@@ -54,7 +57,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapClickListener,
-        MapboxMap.OnMarkerClickListener{
+        MapboxMap.OnMarkerClickListener, FireBaseEventListener {
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     private MapView mapView;
     private MapboxMap map;
@@ -130,7 +133,10 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
 
         locationPicker = new LocationPicker(bottomSheet,stops, positionMarker);
         Intent intent = this.getIntent();
-        locationPicker.setRoute((Route) intent.getSerializableExtra(Route.TAG));
+        Route route = new Route();
+        route.setName(intent.getStringExtra(ProfileFragment.ROUTE_NAME));
+        route.setDescription(intent.getStringExtra(ProfileFragment.ROUTE_DESCRIPTION));
+        locationPicker.setRoute(route);
         saveRouteData();
     }
 
@@ -166,23 +172,24 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
 
     private void saveRouteData(){
         saveRouteData.setOnClickListener((View view) ->{
-            if(stops.size() > 1){
-                uploadStopsData();
+            if(stops.size()> 1 && routeMapBox.getMapBoxUri() != null){
+                FireBaseEventListener fireBaseEventListener = this;
+                FireBasePicture firebasePicture = new FireBasePicture(fireBaseEventListener,this);
+                firebasePicture.uploadPicture(routeMapBox.getMapBoxUri());
+            }else{
+                Toast.makeText(getApplicationContext(), "Defina más de dos marcadores y defina una ruta",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void uploadStopsData(){
+    private void uploadStopsData(String url,ProgressDialog progressDialog){
         Route route = locationPicker.getRoute();
         route.setCost(35);
         route.setCooperativeID(4);
         route.setStops(stops);
-
-        ProgressDialog progressDialog = new ProgressDialog(this);
+        route.setUrlImage(url);
         progressDialog.setMessage(getString(R.string.progrees_dialog_message));
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
         Call<Route> call = Api.instance().postRoute(route);
         call.enqueue(new Callback<Route>() {
@@ -190,9 +197,12 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onResponse(@NonNull Call<Route> call,@NonNull Response<Route> response) {
                 System.out.print(call.request().url());
-                if(response.body() == null){
-                    Log.e(getString(R.string.message), new ApiMessage().sendMessageOfResponseAPI(response.code(),
-                            getApplicationContext()));
+                if(response.body() != null){
+                    //Finish Activity
+                    response.body().setCreateAt("");
+                    getIntent().putExtra(ProfileFragment.ROUTE_ID,response.body());
+                    setResult(RESULT_OK, getIntent());
+                    finish();
                 }
                 progressDialog.dismiss();
             }
@@ -209,12 +219,13 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
     public void drawRouteInMap(){
 
         drawRoute.setOnClickListener((View view) ->{
-
             if(map.getMarkers().size() > 1){
                 routeMapBox = new RouteMapBox(getString(R.string.access_token), map,
-                        getApplicationContext());
-
+                        this);
                 routeMapBox.initSource();
+                for(Marker marker : map.getMarkers()){
+                    marker.hideInfoWindow();
+                }
                 routeMapBox.setRoute(locationPicker.getRoute());
                 routeMapBox.drawRoute();
             }else{
@@ -355,5 +366,15 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
                     .build();
             map.animateCamera(CameraUpdateFactory.newCameraPosition(newCameraPosition), 4000);
         }
+    }
+
+    @Override
+    public void uploadPicture(Uri uri, ProgressDialog progressDialog) {
+        uploadStopsData(String.valueOf(uri), progressDialog);
+    }
+
+    @Override
+    public void uploadPictures() {
+
     }
 }

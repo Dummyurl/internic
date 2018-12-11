@@ -39,10 +39,10 @@ public class TypeNewsAdapter extends RecyclerView.Adapter<TypeNewsAdapter.MyView
 
         private MyViewHolder(@NonNull View view) {
             super(view);
-            image = view.findViewById(R.id.type_news_image);
-            title = view.findViewById(R.id.type_news_title);
-            description = view.findViewById(R.id.type_news_description);
-            typeNewsItem = view.findViewById(R.id.item_type_news);
+            image = view.findViewById(R.id.type_user_image);
+            title = view.findViewById(R.id.type_user_title);
+            description = view.findViewById(R.id.type_user_description);
+            typeNewsItem = view.findViewById(R.id.item_type_user);
         }
     }
 
@@ -50,7 +50,9 @@ public class TypeNewsAdapter extends RecyclerView.Adapter<TypeNewsAdapter.MyView
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_type_news, viewGroup, false);
+
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.dialog_item_recycler_view, viewGroup, false);
         return new MyViewHolder(view);
 
     }

@@ -1,11 +1,7 @@
 package com.uca.devceargo.internic.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.classes.LocalDate;
+import com.uca.devceargo.internic.classes.LocalGlide;
 import com.uca.devceargo.internic.entities.Comment;
 import com.uca.devceargo.internic.entities.User;
 
 import java.util.List;
-import java.util.Objects;
 
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -78,31 +68,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             userBirthDate = view.findViewById(R.id.user_birth_date);
             context = view.getContext();
         }
-
-        @SuppressLint("CheckResult")
-        private void loadImage(String url, ImageView imageView){
-
-            CircularProgressDrawable placeHolder = new CircularProgressDrawable(
-                    Objects.requireNonNull(context));
-            placeHolder.setStrokeWidth(5f);
-            placeHolder.setCenterRadius(30f);
-            placeHolder.start();
-
-            Glide.with(context).load(url)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            placeHolder.stop();
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            placeHolder.stop();
-                            return false;
-                        }
-                    }).apply(new RequestOptions().centerCrop().error(R.drawable.placeholder)).into(imageView);
-        }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -130,7 +95,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (viewType){
             case 1:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.fragment_user_data, parent, false);
+                        .inflate(R.layout.fragment_user_profile, parent, false);
                 // set the view's size, margins, paddings and layout parameters
                 return new ViewHolder2(view);
             case 2:
@@ -160,22 +125,23 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         new LocalDate().getDateInString(user.getCreateAt())));
 
                 fragmentHolder.email.setText(user.getEmail());
-                fragmentHolder.loadImage(user.getUrlImage(),fragmentHolder.userImage);
+                new LocalGlide().loadImage(fragmentHolder.userImage,user.getUrlImage(), LocalGlide.CENTER_CROP);
                 break;
             case 2:
                 ViewHolder cardHolder = (ViewHolder) holder;
                 Comment comment = comments.get(position);
-                Glide.with(cardHolder.view.getContext()).load(comment.getCooperative().getUrlCoverImage())
-                        .apply(new RequestOptions().centerCrop().error(R.drawable.placeholder))
-                        .into(cardHolder.cooperativeCardCover);
+                new LocalGlide().loadImage(cardHolder.cooperativeCardCover,comment.getCooperative().getUrlCoverImage()
+                        ,LocalGlide.CENTER_CROP);
 
-                Glide.with(cardHolder.view.getContext()).load(comment.getCooperative().getUrlShield())
-                        .apply(RequestOptions.circleCropTransform().error(R.drawable.circle_place_holder))
-                        .into(cardHolder.cooperativeCardShield);
+                new LocalGlide().loadImage(cardHolder.cooperativeCardShield,comment.getCooperative().getUrlShield()
+                        ,LocalGlide.CIRCLE_CROP);
 
-                Glide.with(cardHolder.view.getContext()).load(comment.getUser().getUrlImage())
-                        .apply(RequestOptions.circleCropTransform().error(R.drawable.circle_place_holder))
-                        .into(cardHolder.userCardImage);
+                LocalGlide localGlide = new LocalGlide();
+                localGlide.setBackgroundImageID(R.drawable.circle_place_holder);
+                localGlide.loadImage(cardHolder.userCardImage,comment.getUser().getUrlImage()
+                        ,LocalGlide.CIRCLE_CROP);
+                localGlide.loadImage(cardHolder.cooperativeCardShield,comment.getCooperative().getUrlShield()
+                        ,LocalGlide.CIRCLE_CROP);
 
                 cardHolder.cooperativeCardLongName.setText(comment.getCooperative().getFullName());
                 cardHolder.cooperativeCardShortName.setText(comment.getCooperative().getName());

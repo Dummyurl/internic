@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="@dimen/card_elevation"
+        app:cardCornerRadius="2dp"
+        android:layout_marginBottom="@dimen/small_content_space">
+
+        <ImageView
+            android:id="@+id/route_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grayColor"
+            android:contentDescription="@string/dialog_new_route_description_hint" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/size_top_image_login">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#9F000000"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/large_content_space"
+                android:paddingRight="@dimen/large_content_space"
+                android:paddingBottom="@dimen/content_space"
+                tools:ignore="UselessParent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_content_space"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/route_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:drawableStart="@drawable/ic_clock"
+                        android:drawableLeft="@drawable/ic_clock"
+                        android:drawablePadding="@dimen/small_content_space"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/route_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/content_space"
+                        android:layout_marginLeft="@dimen/content_space"
+                        android:drawableStart="@drawable/ic_car"
+                        android:drawableLeft="@drawable/ic_car"
+                        android:drawablePadding="@dimen/small_content_space"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/route_cost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/content_space"
+                        android:layout_marginLeft="@dimen/content_space"
+                        android:drawableStart="@drawable/ic_cost"
+                        android:drawableLeft="@drawable/ic_cost"
+                        android:drawablePadding="@dimen/small_content_space"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/colorWhite" />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/route_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textColor="@color/colorWhite" />
+
+                <TextView
+                    android:id="@+id/route_create_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite" />
+
+                <TextView
+                    android:id="@+id/route_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/content_space"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/colorWhite" />
+            </LinearLayout>
+        </FrameLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

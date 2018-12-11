@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Route implements Serializable {
-    public static final String TAG = "Route";
     private String name;
     private String description;
     private double distance;
@@ -14,6 +13,15 @@ public class Route implements Serializable {
     private int id;
     private int cooperativeID;
     private List<Stop> stops;
+    private String urlImage;
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
+    }
 
     public String getName() {
         return name;

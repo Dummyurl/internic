@@ -52,7 +52,7 @@ public class TypeUserAdapter extends RecyclerView.Adapter<TypeUserAdapter.ViewHo
                                                          int viewType) {
         // create a new view
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_type_user, parent, false);
+                .inflate(R.layout.dialog_item_recycler_view, parent, false);
         // set the view's size, margins, paddings and layout parameters
         return new TypeUserAdapter.ViewHolder(view);
     }

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#85afc7</color>
     <color name="colorPrimaryDark">#618fa9</color>
     <color name="colorAccent">#03A9F4</color>
+    <color name="colorBackgroundMap">#efe9e1</color>
     <color name="colorTextInput">#618fa9</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="placeHolderImage">#F5F5F5</color>

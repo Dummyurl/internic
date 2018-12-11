@@ -5,7 +5,6 @@ package com.uca.devceargo.internic.api;
  */
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.Comment;
-import com.uca.devceargo.internic.entities.Cooperative;
 import com.uca.devceargo.internic.entities.News;
 import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.TypeComment;
@@ -25,12 +24,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
-
     @GET("typesUsers")
     Call<List<TypeUser>> getTypesUsers();
 
     @GET("userscooperatives")
     Call<List<UserCooperative>> getUserCooperative(@Query("filter") String filter);
+
+    @GET("routes")
+    Call<List<Route>> getCooperativeRoutes(@Query("filter") String filter);
 
     @GET("Users/{id}")
     Call<User> getUser(@Path("id") String id,  @Header("Authorization") String authorization);
