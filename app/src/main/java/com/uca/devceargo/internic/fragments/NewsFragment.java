@@ -42,6 +42,7 @@ public class NewsFragment extends Fragment {
     }
 
     private void getNews(){
+        //String filter = getString(R.string.news_filter);
         Call<List<News>> call = Api.instance().getNews();
         call.enqueue(new Callback<List<News>>() {
             @Override
@@ -55,7 +56,7 @@ public class NewsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<News>> call, Throwable t) {
-                Toast.makeText(getContext(), "onFailure las noticias", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "onFailure las noticias"+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

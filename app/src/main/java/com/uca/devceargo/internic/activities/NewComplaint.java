@@ -40,7 +40,7 @@ public class NewComplaint extends AppCompatActivity {
     TextView description;
     Uri uri;
     int cooperativeID;
-    int coomentTypeID;
+    int commentTypeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class NewComplaint extends AppCompatActivity {
 
         if(getIntent().getExtras() != null){
             cooperativeID = getIntent().getExtras().getInt("cooperativeID");
-            coomentTypeID = getIntent().getExtras().getInt("commentTypeID");
+            commentTypeID = getIntent().getExtras().getInt("commentTypeID");
         }
 
         Album.initialize(AlbumConfig.newBuilder(getApplicationContext())
@@ -117,7 +117,7 @@ public class NewComplaint extends AppCompatActivity {
             comment.setUrlImage(uri.toString());
         else
             comment.setUrlImage(null);
-        comment.setTypeCommentID(coomentTypeID);
+        comment.setTypeCommentID(commentTypeID);
         comment.setCooperativeID(cooperativeID);
         comment.setUserID(1);
 

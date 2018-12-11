@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/types_complaint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        style="?android:attr/borderlessButtonStyle"
+        android:paddingLeft="@dimen/large_content_space"
+        android:paddingRight="@dimen/large_content_space"
+        android:paddingTop="@dimen/content_space"
+        android:paddingBottom="@dimen/content_space"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/content_space"
+            android:layout_marginStart="@dimen/content_space"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/type_complaint_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_of_types_uses"
+                android:layout_gravity=""
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu"/>
+
+            <TextView
+                android:id="@+id/type_complaint_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_description"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

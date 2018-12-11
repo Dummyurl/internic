@@ -179,6 +179,9 @@
     <string name="complaint_cooperative_filter">{\"where\":{\"cooperativeID\": %d},
         \"include\":[\"user\",\"typeComment\",\"cooperative\"]}</string>
 
+    <!--News-->
+    <string name="news_filter">{"include":"cooperative"}</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

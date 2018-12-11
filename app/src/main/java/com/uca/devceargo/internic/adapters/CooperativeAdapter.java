@@ -20,6 +20,7 @@ import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.activities.ComplaintCooperative;
 import com.uca.devceargo.internic.activities.NewComplaint;
 import com.uca.devceargo.internic.entities.Cooperative;
+import com.uca.devceargo.internic.fragments.CooperativeFragment;
 
 import java.util.List;
 
@@ -86,13 +87,10 @@ public class CooperativeAdapter extends RecyclerView.Adapter<CooperativeAdapter.
         });
 
         holder.menu.setOnClickListener(view -> {
-            try {
-                showPopupMenu(holder.menu, i);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            showPopupMenu(view, i);
         });
     }
+
 
     private void showPopupMenu(View view, int position) {
         PopupMenu popup = new PopupMenu(context, view);

@@ -50,8 +50,7 @@ public class TypeNewsAdapter extends RecyclerView.Adapter<TypeNewsAdapter.MyView
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_type_news, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_type_news, viewGroup, false);
         return new MyViewHolder(view);
 
     }

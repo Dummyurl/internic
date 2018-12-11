@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +26,6 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.google.gson.Gson;
 import com.tumblr.remember.Remember;
 import com.uca.devceargo.internic.activities.LoginActivity;
 import com.uca.devceargo.internic.activities.RouteMapActivity;
@@ -37,10 +35,8 @@ import com.uca.devceargo.internic.api.Api;
 import com.uca.devceargo.internic.entities.News;
 import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.TypeNews;
-import com.uca.devceargo.internic.entities.User;
-import com.uca.devceargo.internic.fragments.CooperativeFragment;
+import com.uca.devceargo.internic.fragments.ComplaintFragment;
 import com.uca.devceargo.internic.fragments.ProfileFragment;
-import com.uca.devceargo.internic.fragments.ProfileUserFragment;
 
 import java.util.List;
 
@@ -253,7 +249,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(ProfileFragment.class, R.id.nav_profile);
             }else if(user.getTypeUserID() == COMMON_USER){*/
                 navigationView.inflateMenu(R.menu.activity_main_drawer_user);
-                showFragment(CooperativeFragment.class,R.id.nav_user_profile);
+                //showFragment(CooperativeFragment.class,R.id.nav_user_profile);
+                showFragment(ComplaintFragment.class,R.id.nav_user_profile);
             //}
             navigationView.setNavigationItemSelectedListener(this);
         //}
