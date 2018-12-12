@@ -1,9 +1,11 @@
 package com.uca.devceargo.internic.classes;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.tumblr.remember.Remember;
@@ -11,6 +13,7 @@ import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.api.Api;
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.Cooperative;
+import com.uca.devceargo.internic.entities.Location;
 import com.uca.devceargo.internic.entities.User;
 import com.uca.devceargo.internic.entities.UserCooperative;
 
@@ -23,6 +26,7 @@ public class CreateCooperative {
     private Context context;
     private int cooperativeID;
     private int userID;
+    private int locationID;
     private String userPassword;
     private ProgressDialog progressDialog;
 
@@ -30,6 +34,27 @@ public class CreateCooperative {
         this.context = context;
     }
 
+    public void postLocation(Location location, User user, Cooperative cooperative, ProgressDialog dialog) {
+        this.progressDialog = dialog;
+        this.progressDialog.setMessage("Registrando ubicación ...");
+        Call<Location> call = Api.instance().postLocation(location);
+        call.enqueue(new Callback<Location>() {
+            @Override
+            public void onResponse(Call<Location> call, Response<Location> response) {
+                if (response.body() != null) {
+                    userRegister(user, cooperative, progressDialog);
+                    locationID = response.body().getId();
+                }else {
+                    Toast.makeText(context, "nulos locations ", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Location> call, Throwable t) {
+
+            }
+        });
+    }
     public void userRegister(User user, Cooperative cooperative, ProgressDialog progress){
         this.progressDialog = progress;
         this.progressDialog.setMessage("Registrando datos de usuario ...");
@@ -92,6 +117,7 @@ public class CreateCooperative {
     }
 
     private void cooperativeRegister(Cooperative cooperative){
+        cooperative.setLocationID(locationID);
         progressDialog.setMessage("Registrando los datos de la cooperativa ...");
         Call<Cooperative> call = Api.instance().postCooperative(cooperative);
         call.enqueue(new Callback<Cooperative>() {

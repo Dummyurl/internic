@@ -8,8 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PointF;
-import android.media.tv.TvContract;
+import com.mapbox.mapboxsdk.maps.renderer.MapRenderer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -172,6 +171,12 @@ public class NewLateness extends AppCompatActivity implements OnMapReadyCallback
                     i.putExtra("altitude", location.getAltitude());
                     i.putExtra("name", location.getName());
                     i.putExtra("description", location.getDescription());
+
+                    alertDialog.dismiss();
+                    map.clear();
+                    map.cancelTransitions();
+                    map.removeAnnotations();
+                    map.resetNorth();
                     setResult(22, i);
                     finish();
                 }else {
@@ -420,6 +425,15 @@ public class NewLateness extends AppCompatActivity implements OnMapReadyCallback
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_route_map_menu, menu);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (map != null) {
+            map.removeOnMapClickListener(this);
+        }
+        mapView.onDestroy();
     }
 
 

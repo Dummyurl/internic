@@ -75,8 +75,6 @@ public class CooperativeRegister extends AppCompatActivity {
     //Location
     private Location location;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +112,7 @@ public class CooperativeRegister extends AppCompatActivity {
         userBirthday = findViewById(R.id.birthday_register);
         userPassword = findViewById(R.id.user_password_register);
         buttonBirthday = findViewById(R.id.birthday_button);
+        progressDialog = new ProgressDialog(this);
         initActions();
     }
 
@@ -142,7 +141,6 @@ public class CooperativeRegister extends AppCompatActivity {
                 registerCooperative();
                 Toast.makeText(getApplicationContext(), "Registrando...", Toast.LENGTH_SHORT).show();
             }else {
-                progressDialog = new ProgressDialog(this);
                 progressDialog.setMessage("Preparando todo ...");
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.setCancelable(false);
@@ -253,8 +251,7 @@ public class CooperativeRegister extends AppCompatActivity {
         cooperative.setDescription(description.getText().toString());
         cooperative.setFullName(fullName.getText().toString());
         cooperative.setName(name.getText().toString());
-        cooperative.setLocationID(1);
-        cooperative.setQualification("0");
+        cooperative.setQualification("1.0");
         if(uriCover != null) {
             cooperative.setUrlCoverImage(uriCover.toString());
         }else{
@@ -269,7 +266,10 @@ public class CooperativeRegister extends AppCompatActivity {
 
         cooperative.setContactType(contactType.getSelectedItemPosition());
         cooperative.setContactNumber(number.getText().toString());
-        registerUser(cooperative);
+        if(location != null ){
+            registerUser(cooperative);
+        }
+
 
 
     }
@@ -288,7 +288,9 @@ public class CooperativeRegister extends AppCompatActivity {
         }
         user.setEmailVerified(false);
         user.setTypeUserID(2);
-        register.userRegister(user, cooperative, progressDialog);
+
+
+        register.postLocation(location, user, cooperative, progressDialog);
 
         createUser.setEnabled(true);
     }
@@ -308,9 +310,7 @@ public class CooperativeRegister extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if(requestCode == REQUEST_CODE){
-
             if(data != null) {
                 location.setName(data.getStringExtra("name"));
                 location.setDescription(data.getStringExtra("description"));
@@ -322,19 +322,4 @@ public class CooperativeRegister extends AppCompatActivity {
         }
 
     }
-
-     /* private void postLocation(){
-        Call<Location> call = Api.instance().postLocation(location);
-        call.enqueue(new Callback<Location>() {
-            @Override
-            public void onResponse(Call<Location> call, Response<Location> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<Location> call, Throwable t) {
-
-            }
-        });
-    }*/
 }

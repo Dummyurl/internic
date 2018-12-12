@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         mapbox:mapbox_cameraTargetLat="12.509359"
         mapbox:mapbox_cameraTargetLng="-84.617782"
-        mapbox:mapbox_cameraZoom="6"
+        mapbox:mapbox_cameraZoom="7"
         mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10" />
 
     <android.support.design.widget.FloatingActionButton
