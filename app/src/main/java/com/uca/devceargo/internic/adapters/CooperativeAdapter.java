@@ -3,8 +3,11 @@ package com.uca.devceargo.internic.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,7 +23,6 @@ import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.activities.ComplaintCooperative;
 import com.uca.devceargo.internic.activities.NewComplaint;
 import com.uca.devceargo.internic.entities.Cooperative;
-import com.uca.devceargo.internic.fragments.CooperativeFragment;
 
 import java.util.List;
 
@@ -44,10 +45,10 @@ public class CooperativeAdapter extends RecyclerView.Adapter<CooperativeAdapter.
         private RatingBar qualification;
         private TextView contact;
         private TextView showDetails;
-
+        private CardView cardCoop;
         public ViewHolder(@NonNull View view) {
             super(view);
-
+            cardCoop = view.findViewById(R.id.card_cooperative);
             profile = view.findViewById(R.id.card_cooperative_profile);
             cover = view.findViewById(R.id.card_cooperative_cover);
             menu = view.findViewById(R.id.card_cooperative_menu);
@@ -71,7 +72,13 @@ public class CooperativeAdapter extends RecyclerView.Adapter<CooperativeAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
         Cooperative c = cooperativeList.get(i);
         holder.name.setText(c.getName());
-        holder.description.setText(c.getDescription());
+        Spanned text;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            text = Html.fromHtml(c.getDescription(), Html.FROM_HTML_MODE_COMPACT);
+        } else {
+            text = Html.fromHtml(c.getDescription());
+        }
+        holder.description.setText(text);
         holder.qualification.setRating(Float.parseFloat(c.getQualification()));
         holder.contact.setText(c.getContactNumber());
 
@@ -83,7 +90,6 @@ public class CooperativeAdapter extends RecyclerView.Adapter<CooperativeAdapter.
             intent.putExtra("cooperativeID", c.getId());
             context.startActivity(intent);
         });
-
         holder.menu.setOnClickListener(view -> {
             showPopupMenu(view, i);
         });

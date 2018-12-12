@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,8 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.activities.LoginActivity;
 import com.uca.devceargo.internic.activities.RouteMapActivity;
+import com.uca.devceargo.internic.adapters.EmptyAdapter;
+import com.uca.devceargo.internic.adapters.OfflineAdapter;
 import com.uca.devceargo.internic.adapters.ProfileAdapter;
 import com.uca.devceargo.internic.adapters.ProgressAdapter;
 import com.uca.devceargo.internic.adapters.TypeNewsAdapter;
@@ -47,13 +50,17 @@ public class ProfileFragment extends Fragment {
     public static final String ROUTE_NAME = "route_name";
     public static final String ROUTE_DESCRIPTION = "route_description";
     public static final String ROUTE_ID = "routeObject";
+    public static final String COOPERATIVE_ID = "cooperativeID";
     private User user;
+    private int cooperativeID;
     private View view;
     private RecyclerView recyclerView;
+    private int band;
     FloatingActionButton newRoute;
     FloatingActionButton newNews;
     List<Route> routes;
     ProfileAdapter profileAdapter;
+    SwipeRefreshLayout swipe;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -65,11 +72,25 @@ public class ProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         assert getArguments() != null;
         user = (User) getArguments().getSerializable(LoginActivity.USER_ID);
+        band = 0;
         recyclerView = view.findViewById(R.id.profile_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         routes = new ArrayList<>();//Define List of routes
         getCooperativeAPI();
         initFabButtons();
+        swipe = view.findViewById(R.id.refresh_layout);
+        swipeListener();
         return view;
+    }
+
+    private void swipeListener(){
+        swipe = view.findViewById(R.id.refresh_layout);
+        swipe.setOnRefreshListener(this::getCooperativeAPI);
+        swipe.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void initFabButtons(){
@@ -88,6 +109,14 @@ public class ProfileFragment extends Fragment {
             showDialogNewNews();
             fab.close(true);
         });
+    }
+
+    public int getCooperativeID() {
+        return cooperativeID;
+    }
+
+    public void setCooperativeID(int cooperativeID) {
+        this.cooperativeID = cooperativeID;
     }
 
     @SuppressLint("InflateParams")
@@ -115,15 +144,18 @@ public class ProfileFragment extends Fragment {
         dialog.setView(view);
         getTypeNews(recyclerView, dialog);
         dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((View view1) ->
-                uploadNews(dialog));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((View view1) -> {
+            if(cooperativeID > 0){
+                uploadNews(dialog);
+            }
+        });
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
     }
 
 
     public void uploadNews(AlertDialog dialog){
         News news = new News();
-        news.setCooperativeID(4);
+        news.setCooperativeID(cooperativeID);
         news.setLocationID(1);
         news.setTypeNewID(2);
         EditText title = dialog.findViewById(R.id.standard_title);
@@ -208,45 +240,69 @@ public class ProfileFragment extends Fragment {
 
             if(name.isEmpty() || description.isEmpty()){
                 Toast.makeText(context,getText(R.string.empty_fields_message), Toast.LENGTH_SHORT).show();
-            }else {
+            }else if(cooperativeID != 0){
                 Intent intent = new Intent(context,RouteMapActivity.class);
                 intent.putExtra(ROUTE_NAME, name);
+                intent.putExtra(COOPERATIVE_ID,cooperativeID);
                 intent.putExtra(ROUTE_DESCRIPTION, description);
                 startActivityForResult(intent, REQUEST_CODE);
                 dialog.dismiss();
+            }else{
+                Toast.makeText(getContext(),"Error al cargar el ID de la cooperativa",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @SuppressLint("LogNotTimber")
     private void getCooperativeAPI(){
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new ProgressAdapter());
+        if(band == 0){
+            recyclerView.setAdapter(new ProgressAdapter());
+        }
         String filter = String.format(getString(R.string.user_cooperative_filter_in_request),user.getId());
 
         Call<List<UserCooperative>> call = Api.instance().getUserCooperative(filter);
         call.enqueue(new Callback<List<UserCooperative>>() {
             @Override
             public void onResponse(@NonNull Call<List<UserCooperative>> call, @NonNull Response<List<UserCooperative>> response) {
-                if(response.body() != null){
+                if(response.body() != null && routes.size() < 1){
                     if(response.body().size() > 0){
                         Route route = new Route();
                         profileAdapter = new ProfileAdapter(routes);//Define new profileAdapter Object
                         routes.add(route);
                         recyclerView.setAdapter(profileAdapter);
+                        cooperativeID = response.body().get(0).getCooperative().getId();
                         profileAdapter.setCooperative(response.body().get(0).getCooperative());
                         getRoutes(response.body().get(0).getCooperative().getId());
+                    }else{
+                        recyclerView.setAdapter(new EmptyAdapter());
                     }
+                    band = 1;
                 }else{
                     showMessageInSnackbar(response.code());
+                    if(band == 0){
+                        recyclerView.setAdapter(new OfflineAdapter(
+                                new ApiMessage().sendMessageOfResponseAPI(response.code(),getContext()),
+                                String.valueOf(response.code()),getString(R.string.default_message)));
+                    }
                 }
+                swipe.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<UserCooperative>> call, @NonNull Throwable throwable) {
+
+                if(throwable.getMessage().equalsIgnoreCase("timeout") && band == 0){
+                    recyclerView.setAdapter(new OfflineAdapter(
+                            new ApiMessage().sendMessageOfResponseAPI(ApiMessage.REQUEST_TIMEOUT,getContext()),
+                            String.valueOf(ApiMessage.REQUEST_TIMEOUT),getString(R.string.default_message)));
+                }else{
+                    recyclerView.setAdapter(new OfflineAdapter(
+                            getString(R.string.message_network_connection_error),
+                            getString(R.string.default_message)));
+                }
                 showMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
                 Log.e(getString(R.string.error_message_api),throwable.getMessage());
+                swipe.setRefreshing(false);
             }
         });
     }

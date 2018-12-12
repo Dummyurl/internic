@@ -4,19 +4,26 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.tumblr.remember.Remember;
 import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.api.Api;
+import com.uca.devceargo.internic.api.ApiMessage;
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.Cooperative;
 import com.uca.devceargo.internic.entities.User;
 import com.uca.devceargo.internic.entities.UserCooperative;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class CreateCooperative {
 
@@ -40,6 +47,8 @@ public class CreateCooperative {
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if(response.body() != null) {
                     Gson gson = new Gson();
+                    Calendar calendar = new GregorianCalendar();
+                    response.body().setCreateAt(new LocalDate().getDateISOformat(calendar.getTime()));
                     String userJson = gson.toJson(response.body());
                     Remember.putString("userData", userJson, (Boolean success) -> {
                         if (success) {
@@ -52,12 +61,14 @@ public class CreateCooperative {
 
                 }else{
                     progressDialog.dismiss();
+                    sendMessageInSnackbar(response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 progressDialog.dismiss();
+                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
         });
     }
@@ -80,12 +91,14 @@ public class CreateCooperative {
                     });
                 }else{
                     progressDialog.dismiss();
+                    sendMessageInSnackbar(response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<AccessToken> call,@NonNull Throwable throwable) {
                 progressDialog.dismiss();
+                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
         });
 
@@ -103,12 +116,14 @@ public class CreateCooperative {
                     userCooperativeRegister();
                 }else{
                     progressDialog.dismiss();
+                    sendMessageInSnackbar(response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Cooperative> call,@NonNull Throwable throwable) {
                 progressDialog.dismiss();
+                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
         });
     }
@@ -127,19 +142,28 @@ public class CreateCooperative {
             public void onResponse(@NonNull Call<UserCooperative> call,@NonNull Response<UserCooperative> response) {
                 if(response.body() != null){
                     progressDialog.dismiss();
+                    sendMessageInSnackbar(response.code());
                     context.startActivity(new Intent(context.getApplicationContext(), MainActivity.class));
                 }else{
                     progressDialog.dismiss();
+                    sendMessageInSnackbar(response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<UserCooperative> call,@NonNull Throwable throwable) {
                 progressDialog.dismiss();
+                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
         });
-
     }
 
-
+    private void sendMessageInSnackbar(int code){
+        View contextView = progressDialog.findViewById(android.R.id.content);
+        String message = new ApiMessage().sendMessageOfResponseAPI(code,context);
+        Timber.i(message);
+        Snackbar.make(contextView,message,
+                Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
 }

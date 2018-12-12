@@ -180,6 +180,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 route.getCost()));
         routeHolder.routeCreateAt.setText(new LocalDate().getDateInStringWithHour(route.getCreateAt()));
 
-        new LocalGlide().loadImageCenterCrop(routeHolder.routeImage,route.getUrlImage(),routeHolder.context);
+        new LocalGlide().loadImageCenterCrop(routeHolder.routeImage,
+                route.getUrlImage(),routeHolder.context);
     }
 }

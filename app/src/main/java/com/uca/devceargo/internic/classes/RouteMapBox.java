@@ -48,6 +48,10 @@ public class RouteMapBox {
     private static final String ROUTE_LAYER_ID = "route-layer-id";
     private static final String ROUTE_SOURCE_ID = "route-source-id";
     private static final String ICON_SOURCE_ID = "icon-source-id";
+    private static final String ROUTE_LAYER_ID2 = "route-layer-id2";
+    private static final String ROUTE_SOURCE_ID2 = "route-source-id2";
+    private static final String ICON_SOURCE_ID2 = "icon-source-id2";
+
     private DirectionsRoute currentRoute;
     private MapboxMap map;
     private String accessToken;

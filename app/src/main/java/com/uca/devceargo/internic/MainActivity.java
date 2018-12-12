@@ -12,17 +12,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.tumblr.remember.Remember;
 import com.uca.devceargo.internic.activities.LoginActivity;
-import android.view.MenuItem;
 import com.google.gson.Gson;
-import com.tumblr.remember.Remember;
-import com.uca.devceargo.internic.activities.ComplaintCooperative;
-import com.uca.devceargo.internic.activities.LoginActivity;
+import com.uca.devceargo.internic.classes.LocalGlide;
 import com.uca.devceargo.internic.entities.User;
+import com.uca.devceargo.internic.fragments.ComplaintFragment;
 import com.uca.devceargo.internic.fragments.CooperativeFragment;
 import com.uca.devceargo.internic.fragments.NewsFragment;
 import com.uca.devceargo.internic.fragments.ProfileFragment;
@@ -32,15 +32,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int COMMON_USER = 1;
     private static final int COOPERATIVE_USER = 2;
     private User user;
+    private int cooperativeID;
+    private int itemSelect;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         isAuthenticated();
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        cooperativeID = 0;
+        itemSelect = 0;
         defineTypeMenuAndUser();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -90,14 +92,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(ProfileUserFragment.class,R.id.nav_user_profile);
             }
             navigationView.setNavigationItemSelectedListener(this);
+            initUserData(navigationView.getHeaderView(0));
         }
+    }
+
+    private void initUserData(View view) {
+        ImageView profileImage =  view.findViewById(R.id.nav_profile_image);
+        TextView profileUserName = view.findViewById(R.id.nav_user_name);
+        TextView profileEmail = view.findViewById(R.id.nav_user_email);
+
+        new LocalGlide().loadImage(profileImage,user.getUrlImage(),LocalGlide.CIRCLE_CROP);
+        profileEmail.setText(user.getEmail());
+        profileUserName.setText(user.getUserName());
     }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if(itemSelect == R.id.nav_profile  && user.getTypeUserID() == COOPERATIVE_USER){
+            showFragment(ProfileFragment.class,R.id.nav_profile);
+        } else if(itemSelect == R.id.nav_user_profile  && user.getTypeUserID() == COMMON_USER){
+            showFragment(ProfileUserFragment.class,R.id.nav_user_profile);
+        }else {
             super.onBackPressed();
         }
     }
@@ -112,19 +129,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id){
 
             case  R.id.nav_user_profile:
-                showFragment(ProfileUserFragment.class,R.id.nav_user_profile);
+                if(! (R.id.nav_user_profile == itemSelect || R.id.nav_profile  == itemSelect)){
+                    showFragment(ProfileUserFragment.class,R.id.nav_user_profile);
+                }
                 break;
             case  R.id.nav_profile:
-                showFragment(ProfileFragment.class, R.id.nav_profile);
+                if(! (R.id.nav_user_profile == itemSelect || R.id.nav_profile  == itemSelect)){
+                    showFragment(ProfileFragment.class, R.id.nav_profile);
+                }
                 break;
             case  R.id.nav_news:
                 showFragment(NewsFragment.class,R.id.nav_news);
                 break;
             case  R.id.nav_complaint:
-                showFragment(ComplaintCooperative.class, R.id.nav_complaint);
+                System.out.println();
+                showFragment(ComplaintFragment.class, R.id.nav_complaint);
                 break;
-            case  R.id.nav_setting:
-                //Developing, replace this line
+            case  R.id.nav_cooperative_news:
+                showFragment(NewsFragment.class,R.id.nav_news);
                 break;
             case  R.id.nav_about_us:
                 //Developing, replace this line
@@ -140,10 +162,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //Developing, replace this line
                 break;
             default:
-
                 break;
         }
-
+        this.itemSelect = id;
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -154,11 +175,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Fragment fragment;
         try {
+            Bundle args = new Bundle();
             fragment = (Fragment) fragmentClass.newInstance();
             // Insert the fragment by replacing any existing fragment
             if( itemSelected == R.id.nav_profile || itemSelected == R.id.nav_user_profile){
-                Bundle args = new Bundle();
+
+                if(itemSelected == R.id.nav_profile)
+                    ((ProfileFragment) fragment).setCooperativeID(cooperativeID);
+
                 args.putSerializable(LoginActivity.USER_ID,user);
+                fragment.setArguments(args);
+            }
+
+            if(itemSelected == R.id.nav_news ||
+                    itemSelected == R.id.nav_complaint && user.getTypeUserID() != COMMON_USER){
+
+                args.putInt(NewsFragment.COOPERATIVE_ID,cooperativeID);
                 fragment.setArguments(args);
             }
             FragmentManager fragmentManager = getSupportFragmentManager();

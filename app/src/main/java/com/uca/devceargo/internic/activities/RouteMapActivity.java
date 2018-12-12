@@ -69,6 +69,7 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
     private FloatingActionButton drawRoute;
     private FloatingActionButton positionMarker;
     private LinearLayout bottomSheet;
+    private int cooperativeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,6 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
         initViews();
         drawRouteInMap();
 
@@ -105,6 +105,7 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
             drawRoute.setVisibility(View.INVISIBLE);
             saveRouteData.setVisibility(View.INVISIBLE);
             positionMarker.setVisibility(View.INVISIBLE);
+
         }
     }
 
@@ -136,8 +137,14 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
         Route route = new Route();
         route.setName(intent.getStringExtra(ProfileFragment.ROUTE_NAME));
         route.setDescription(intent.getStringExtra(ProfileFragment.ROUTE_DESCRIPTION));
+        cooperativeID = getIntent().getIntExtra(ProfileFragment.COOPERATIVE_ID,0);
         locationPicker.setRoute(route);
         saveRouteData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -186,8 +193,8 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
     private void uploadStopsData(String url,ProgressDialog progressDialog){
         Route route = locationPicker.getRoute();
         route.setCost(35);
-        route.setCooperativeID(4);
         route.setStops(stops);
+        route.setCooperativeID(cooperativeID);
         route.setUrlImage(url);
         progressDialog.setMessage(getString(R.string.progrees_dialog_message));
 
@@ -313,6 +320,8 @@ public class RouteMapActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
+
+
         int visibility = bottomSheet.findViewById(R.id.scroll_view_sheet).getVisibility();
         deleteMarker.setVisibility(View.GONE);
 

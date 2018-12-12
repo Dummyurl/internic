@@ -23,7 +23,6 @@ public class LocalGlide {
     private int errorImageID;
     private int backgroundImageID;
     private RequestOptions requestOptions;
-
     public LocalGlide() {
         errorImageID = 0;
         backgroundImageID = 0;
@@ -62,7 +61,9 @@ public class LocalGlide {
     @SuppressLint("CheckResult")
     public void loadImage(ImageView imageView, String url, int opc){
         defineRequiestOption(opc);
-        Glide.with(imageView.getContext()).load(url).apply(requestOptions).into(imageView);
+       if(imageView != null){
+           Glide.with(imageView.getContext()).load(url).apply(requestOptions).into(imageView);
+       }
     }
 
     @SuppressLint("CheckResult")

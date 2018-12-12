@@ -38,6 +38,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ViewHolder(View view) {
             super(view);
             this.view = view;
+
             cooperativeCardCover = view.findViewById(R.id.cooperative_card_cover);
             cooperativeCardShield = view.findViewById(R.id.cooperative_card_shield);
             cooperativeCardLongName = view.findViewById(R.id.cooperative_card_long_name);
@@ -130,11 +131,11 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case 2:
                 ViewHolder cardHolder = (ViewHolder) holder;
                 Comment comment = comments.get(position);
-                new LocalGlide().loadImage(cardHolder.cooperativeCardCover,comment.getCooperative().getUrlCoverImage()
-                        ,LocalGlide.CENTER_CROP);
+                new LocalGlide().loadImage(cardHolder.cooperativeCardCover,
+                        comment.getCooperative().getUrlCoverImage(),LocalGlide.CENTER_CROP);
 
-                new LocalGlide().loadImage(cardHolder.cooperativeCardShield,comment.getCooperative().getUrlShield()
-                        ,LocalGlide.CIRCLE_CROP);
+                new LocalGlide().loadImage(cardHolder.cooperativeCardShield,
+                        comment.getCooperative().getUrlShield(),LocalGlide.CIRCLE_CROP);
 
                 LocalGlide localGlide = new LocalGlide();
                 localGlide.setBackgroundImageID(R.drawable.circle_place_holder);

@@ -64,11 +64,17 @@ public interface ApiInterface {
     @GET("news?filter={\"include\":\"cooperative\"}")
     Call<List<News>> getNews();
 
+    @GET("news")
+    Call<List<News>> getNews(@Query("filter") String filter);
+
     @GET("cooperatives")
     Call<List<Cooperative>> getCooperatives();
 
     @GET("typesComments")
     Call<List<TypeComment>> getComments();
+
+    @GET("cooperatives?filter={\"include\":[\"location\",{\"routes\":\"stops\"}]}")
+    Call<List<Cooperative>> getCooperativesWithLocation();
 
     @POST("cooperatives")
     Call<Cooperative> postCooperative(@Body Cooperative cooperative);

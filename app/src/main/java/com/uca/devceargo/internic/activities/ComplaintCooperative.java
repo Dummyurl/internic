@@ -3,16 +3,20 @@ package com.uca.devceargo.internic.activities;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.List;
 
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.adapters.ComplaintAdapter;
+import com.uca.devceargo.internic.adapters.EmptyAdapter;
+import com.uca.devceargo.internic.adapters.OfflineAdapter;
 import com.uca.devceargo.internic.adapters.ProgressAdapter;
 import com.uca.devceargo.internic.api.Api;
 import com.uca.devceargo.internic.api.ApiMessage;
@@ -28,16 +32,32 @@ public class ComplaintCooperative extends AppCompatActivity {
     RecyclerView recycler;
     SwipeRefreshLayout swipe;
     int cooperativeID;
-
+    int band;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complaint_cooperative);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        band = 0;
         receiveParameters();
         setRecycler();
         getComments();
         swipeListener();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private void receiveParameters() {
@@ -62,26 +82,45 @@ public class ComplaintCooperative extends AppCompatActivity {
     }
 
     private void getComments(){
+        if(band == 0)recycler.setAdapter(new ProgressAdapter());
+
         String filter = String.format(this.getString(R.string.complaint_cooperative_filter), cooperativeID);
-        recycler.setAdapter(new ProgressAdapter());
         Call<List<Comment>> call = Api.instance().getCommentCooperative(filter);
 
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(@NonNull Call<List<Comment>> call,@NonNull Response<List<Comment>> response) {
                 if(response.body() != null){
-                    recycler.setAdapter(new ComplaintAdapter(response.body(), getApplicationContext()));
-                    swipe.setRefreshing(false);
+                    if(!response.body().isEmpty()){
+                        recycler.setAdapter(new ComplaintAdapter(response.body(), getApplicationContext()));
+                    }else if(band == 0){
+                        recycler.setAdapter(new EmptyAdapter());
+                    }
+                    band = 1;
                 }else{
                     sendMessageInSnackbar(response.code());
-                    swipe.setRefreshing(false);
+                    if(band == 0){
+                        recycler.setAdapter(new OfflineAdapter(
+                                new ApiMessage().sendMessageOfResponseAPI(response.code(),getApplicationContext()),
+                                String.valueOf(response.code()),getString(R.string.default_message)));
+                    }
                 }
+                swipe.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Comment>> call,@NonNull Throwable throwable) {
-                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
                 swipe.setRefreshing(false);
+                if(throwable.getMessage().equalsIgnoreCase("timeout") && band == 0){
+                    recycler.setAdapter(new OfflineAdapter(
+                            new ApiMessage().sendMessageOfResponseAPI(ApiMessage.REQUEST_TIMEOUT,getApplicationContext()),
+                            String.valueOf(ApiMessage.REQUEST_TIMEOUT),getString(R.string.default_message)));
+                }else{
+                    recycler.setAdapter(new OfflineAdapter(
+                            getString(R.string.message_network_connection_error),
+                            getString(R.string.default_message)));
+                }
+                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
         });
     }

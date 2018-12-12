@@ -327,7 +327,11 @@ public class LoginActivity extends AppCompatActivity {
         if(typeUserFragment != null){
             if(typeUserFragment.isVisible()){
                 Toast.makeText(getApplicationContext(),"Espere a que finalice la accion actual", Toast.LENGTH_SHORT).show();
+            }else {
+                finish();
             }
+        }else {
+            finish();
         }
     }
 

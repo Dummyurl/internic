@@ -123,19 +123,21 @@
     <string name="title_name">Nombre</string>
     <string name="button_retry_message">reintentar</string>
     <string name="empty_fields_message">Todos los campos son requeridos.</string>
+    <string name="empty_layout_message">Sin registros por mostrar</string>
 
     <!--Message of response API-->
     <string name="message_code_ok">Solicitud realizada con éxito</string>
-    <string name="message_bad_request">el servidor no va a procesar su petición por un error del sistema.</string>
-    <string name="message_forbidden">problemas de conexión, intente nuevamente.</string>
-    <string name="message_not_found">el recurso de la solicitud actual, no se ha podido encontrar</string>
-    <string name="message_request_timeout">el tiempo de espera se ha agotado</string>
-    <string name="message_expectation_failed">error interno de la aplicación, ocurrio un error inesperado.</string>
-    <string name="message_internal_server_error">se ha producido un error desconocido al procesar la solicitud.</string>
-    <string name="message_network_connection_error">error de conexión, no se puede concretar la respuesta.</string>
+    <string name="message_bad_request">El servidor no va a procesar su petición por un error del sistema.</string>
+    <string name="message_forbidden">Problemas de conexión, intente nuevamente.</string>
+    <string name="message_not_found">El recurso de la solicitud actual, no se ha podido encontrar</string>
+    <string name="message_request_timeout">El tiempo de espera se ha agotado</string>
+    <string name="message_expectation_failed">Error interno de la aplicación, ocurrio un error inesperado.</string>
+    <string name="message_internal_server_error">Se ha producido un error desconocido al procesar la solicitud.</string>
+    <string name="message_network_connection_error">No se puede concretar la respuesta, verfique tener acceso a internet.</string>
+    <string name="message_connection_error">Error de conexión, verfique tener acceso a internet.</string>
     <string name="message_login_failed">Error, usuario o contraseña incorrecto.</string>
-    <string name="message_api_format">%d, %s</string>
-
+    <string name="message_un_processable_entity">El nombre de usuario o correo ya existe </string>
+    <string name="default_message">Error de conexión</string>
 
     <!--New bus-->
     <string name="message_of_image_view_new_bus">Imagen del nuevo interlocal</string>

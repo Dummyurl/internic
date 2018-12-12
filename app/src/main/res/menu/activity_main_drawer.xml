@@ -9,10 +9,10 @@
             android:icon="@drawable/ic_profile"
             android:title="@string/profile"
             android:checked="true"/>
-       <!-- <item
-            android:id="@+id/nav_news"
+        <item
+            android:id="@+id/nav_cooperative_news"
             android:icon="@drawable/ic_news"
-            android:title="@string/news" />-->
+            android:title="@string/news" />
         <item
             android:id="@+id/nav_complaint"
             android:icon="@drawable/ic_complaint"

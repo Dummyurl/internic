@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,6 +71,8 @@ public class CooperativeRegister extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_cooperative_register);
 
         initViews();
@@ -226,6 +229,7 @@ public class CooperativeRegister extends AppCompatActivity {
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "No se pudieron subir la imagen ", Toast.LENGTH_SHORT).show();
+                registerCooperative();
             }
         });
 
@@ -275,6 +279,19 @@ public class CooperativeRegister extends AppCompatActivity {
         register.userRegister(user, cooperative, progressDialog);
 
         createUser.setEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(navigationView == 0 || navigationView== 2){
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }else {
+            if (navigationView == 1){
+                viewSwitcher.showPrevious();
+                navigationView =2;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

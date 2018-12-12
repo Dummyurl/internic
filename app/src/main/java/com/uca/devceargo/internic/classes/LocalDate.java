@@ -59,10 +59,16 @@ public class LocalDate {
 
         if(simpleDate == null){
             simpleDate = "1900-01-01";
+        }else if(simpleDate.isEmpty()){
+            simpleDate = "1999-01-01";
         }
         DateTimeFormatter parser1 = DateTimeFormat.forPattern("yyyy-MM-dd");
         DateTime time = parser1.parseDateTime(simpleDate);
         Date date = time.toDate();
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ", new Locale("es", "ES")).format(date);
+    }
+
+    public String getDateISOformat(Date date){
         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ", new Locale("es", "ES")).format(date);
     }
 
