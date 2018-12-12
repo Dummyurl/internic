@@ -172,6 +172,12 @@
     <string name="post_news_title">Publicar nueva noticia</string>
     <string name="post_news_message">Nueva noticia publicada</string>
 
+    <string name="dialog_news_place_title">Nombre de la localidad</string>
+    <string name="dialog_news_place_description">Descripción de la localidad</string>
+    <string name="dialog_news_title">Título de la noticia</string>
+    <string name="dialog_news_descripttion">Descripción de la noticia</string>
+
+
     <!-- Cooperatives -->
     <string name="action_new_complaint">Denunciar</string>
     <string name="action_new_opinion">Publicar opinión</string>

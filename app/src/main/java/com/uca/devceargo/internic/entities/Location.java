@@ -2,7 +2,7 @@ package com.uca.devceargo.internic.entities;
 
 public class Location {
     private int id;
-    private float altitude;
+    private Double altitude;
     private Double latitude;
     private Double longitude;
     private float accuracy;
@@ -20,11 +20,11 @@ public class Location {
         this.id = id;
     }
 
-    public float getAltitude() {
+    public Double getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(float altitude) {
+    public void setAltitude(Double altitude) {
         this.altitude = altitude;
     }
 

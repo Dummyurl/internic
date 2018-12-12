@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        mapbox:mapbox_cameraTargetLat="40.73581"
-        mapbox:mapbox_cameraTargetLng="-73.99155"
-        mapbox:mapbox_cameraZoom="11"
+        mapbox:mapbox_cameraTargetLat="12.509359"
+        mapbox:mapbox_cameraTargetLng="-84.617782"
+        mapbox:mapbox_cameraZoom="6"
         mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10" />
 
     <android.support.design.widget.FloatingActionButton
@@ -21,9 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-
         android:layout_margin="16dp"
-        android:src="@drawable/ic_next_white"
+        android:src="@drawable/ic_done"
         />
 
 </FrameLayout>

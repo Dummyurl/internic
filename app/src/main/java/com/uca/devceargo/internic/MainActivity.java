@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(ProfileFragment.class, R.id.nav_profile);
                 break;
             case  R.id.nav_news:
-                showFragment(NewsFragment.class, R.id.nav_profile);
+                showFragment(NewsFragment.class, R.id.nav_news);
                 break;
             case  R.id.nav_complaint:
                 //Developing, replace this line

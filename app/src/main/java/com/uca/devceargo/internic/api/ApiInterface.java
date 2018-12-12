@@ -6,6 +6,7 @@ package com.uca.devceargo.internic.api;
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.Comment;
 import com.uca.devceargo.internic.entities.Cooperative;
+import com.uca.devceargo.internic.entities.Location;
 import com.uca.devceargo.internic.entities.News;
 import com.uca.devceargo.internic.entities.Route;
 import com.uca.devceargo.internic.entities.TypeComment;
@@ -57,6 +58,9 @@ public interface ApiInterface {
 
     @POST("comments")
     Call<Comment> postComment(@Body Comment comment);
+
+    @POST("locations")
+    Call<Location> postLocation(@Body Location location);
 
     @POST("routes/savefullroute")
     Call<Route> postRoute(@Body Route route);

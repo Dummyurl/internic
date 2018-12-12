@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.classes.CreateCooperative;
 import com.uca.devceargo.internic.classes.LocalDate;
 import com.uca.devceargo.internic.entities.Cooperative;
+import com.uca.devceargo.internic.entities.Location;
 import com.uca.devceargo.internic.entities.User;
 import com.yanzhenjie.album.Album;
 import com.yanzhenjie.album.AlbumConfig;
@@ -56,6 +58,8 @@ public class CooperativeRegister extends AppCompatActivity {
     private Uri uriProfile;
     private Uri uriCover;
     private Uri uri;
+    private Button maps;
+    static final int REQUEST_CODE = 22;
     //Dialog
     AlertDialog dialog;
     View view;
@@ -79,13 +83,16 @@ public class CooperativeRegister extends AppCompatActivity {
     Button buttonBirthday;
     private int images;
 
+    //Location
+    private Location location;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cooperative_register);
-
+        location = new Location();
         initViews();
     }
 
@@ -103,6 +110,7 @@ public class CooperativeRegister extends AppCompatActivity {
         fullName = findViewById(R.id.cooperative_register_full_name);
         viewSwitcher = findViewById(R.id.view_switcher_cooperative);
         nextButton = findViewById(R.id.cooperative_register_next_button);
+        maps = findViewById(R.id.cooperative_register_maps);
 
         //User
         userProfile = findViewById(R.id.user_register_profile_image);
@@ -127,6 +135,11 @@ public class CooperativeRegister extends AppCompatActivity {
     }
 
     private void initActions(){
+
+        maps.setOnClickListener(view1 -> {
+            NewLateness.TYPE_REQUEST = 2;
+            startActivityForResult(new Intent(getApplicationContext(), NewLateness.class), REQUEST_CODE);
+        });
 
         profile.setOnClickListener(view -> loadImage(1));
 
@@ -337,4 +350,37 @@ public class CooperativeRegister extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE){
+
+            if(data != null) {
+                location.setName(data.getStringExtra("name"));
+                location.setDescription(data.getStringExtra("description"));
+                location.setLatitude(data.getDoubleExtra("latitude", 0));
+                location.setLongitude(data.getDoubleExtra("longitude", 0));
+                location.setAltitude(data.getDoubleExtra("altitude", 0));
+                maps.setText(location.getName());
+            }
+        }
+
+    }
+
+     /* private void postLocation(){
+        Call<Location> call = Api.instance().postLocation(location);
+        call.enqueue(new Callback<Location>() {
+            @Override
+            public void onResponse(Call<Location> call, Response<Location> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Location> call, Throwable t) {
+
+            }
+        });
+    }*/
 }
