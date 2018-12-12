@@ -5,24 +5,18 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -31,24 +25,22 @@ import com.uca.devceargo.internic.MainActivity;
 import com.uca.devceargo.internic.MediaLoader;
 import com.uca.devceargo.internic.R;
 import com.uca.devceargo.internic.api.Api;
+import com.uca.devceargo.internic.api.ApiMessage;
 import com.uca.devceargo.internic.classes.LocalDate;
 import com.uca.devceargo.internic.entities.AccessToken;
 import com.uca.devceargo.internic.entities.User;
-import com.yanzhenjie.album.Action;
 import com.yanzhenjie.album.Album;
 import com.yanzhenjie.album.AlbumConfig;
-import com.yanzhenjie.album.AlbumFile;
-import com.yanzhenjie.album.AlbumLoader;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class UserRegisterActivity extends AppCompatActivity {
 
@@ -190,15 +182,9 @@ public class UserRegisterActivity extends AppCompatActivity {
         StorageReference riversRef = reference .child("images/"+file.getLastPathSegment());
         UploadTask uploadTask = riversRef.putFile(file);
 
-        uploadTask.addOnFailureListener(exception -> {
-
-        }).addOnSuccessListener(taskSnapshot -> {
-
-        });
-
-        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+        uploadTask.continueWithTask(task -> {
             if (!task.isSuccessful()) {
-                throw task.getException();
+                throw Objects.requireNonNull(task.getException());
             }
             return riversRef.getDownloadUrl();
         }).addOnCompleteListener(task -> {
@@ -220,21 +206,30 @@ public class UserRegisterActivity extends AppCompatActivity {
         Call<AccessToken> call = Api.instance().login(user);
         call.enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(Call<AccessToken> call, final Response<AccessToken> response) {
+            public void onResponse(@NonNull Call<AccessToken> call,@NonNull final Response<AccessToken> response) {
                 if (response.body() != null) {
                     activity.finish();
                     Intent intent = new Intent(activity, MainActivity.class);
                     activity.startActivity(intent);
                 }else{
-                    Toast.makeText(activity, "Inténtelo de nuevo", Toast.LENGTH_SHORT).show();
+                    sendMessageInSnackbar(response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
-                Log.e("AccessTokenData",t.getMessage());
+            public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable throwable) {
+                sendMessageInSnackbar(ApiMessage.DEFAULT_ERROR_CODE);
             }
         });
 
+    }
+
+    private void sendMessageInSnackbar(int code){
+        View contextView = findViewById(android.R.id.content);
+        String message = new ApiMessage().sendMessageOfResponseAPI(code,getApplicationContext());
+        Timber.i(message);
+        Snackbar.make(contextView,message,
+                Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

@@ -274,11 +274,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    /*private void setViewInAdapter(){
-        profileAdapter.setAdapterSize(profileAdapter.getAdapterSize()+1);
-        profileAdapter.setInflateOpc(ProfileAdapter.INFLATE_ERROR_VIEW);
-        profileAdapter.notifyItemRangeChanged(0,(routes.size()));
-    }*/
     private void showMessageInSnackbar(int code){
         String message = new ApiMessage().sendMessageOfResponseAPI(code,view.getContext());
         Snackbar.make(view,message,
